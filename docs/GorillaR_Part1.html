@@ -357,7 +357,7 @@ div.tocify {
   <a href="GorillaR_Part2.html">Part 2</a>
 </li>
 <li>
-  <a href="version.html">version Info</a>
+  <a href="version.html">Version Info</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -378,12 +378,19 @@ div.tocify {
 
 <div id="setting-up" class="section level1">
 <h1>Setting up</h1>
+<div id="loading-the-tidyverse" class="section level3">
+<h3>Loading the tidyverse</h3>
 <p>If you have not done so already, you will need to install the relevant packages, with the following line of code. You will only need to do this once on your computer (unless you require updates etc.).</p>
 <pre class="r"><code>install.packages(&quot;tidyverse&quot;)</code></pre>
 <p>Once you have the packages installed, you need to load them into your library. You need to do this at the start of every script, for every time you open R.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <p>What have we loaded here? By loading the <em>tidyverse</em> library, we have actually loaded several packages, including <em>ggplot2</em> (the go-to package for plotting in R), <em>dplyr</em>, <em>tidyr</em>, <em>readr</em>, <em>purrr</em>, <em>tibble</em>, <em>stringr</em>, and <em>forcats</em>. Each of these packages contains a set of tools that you can draw upon to complete your tasks. We don’t actually use all of them here, but loading the core <em>tidyverse</em> library is an easy way to make a lot of key functions available. There are also more specialist <em>tidyverse</em> packages that you can load in separately (see <a href="https://www.tidyverse.org/packages/">here</a>) for working with particular kinds of data.</p>
+</div>
+<div id="dummy-data" class="section level3">
+<h3>Dummy data</h3>
+<p>This tutorial is a step-by-step example that I hope you can apply to your own data. If you’d like to follow along with my data files, you can download them <a href="https://github.com/emljames/GorillaR/blob/master/story_materials.zip">here</a>.</p>
 <hr />
+</div>
 </div>
 <div id="step-1-reading-in-the-raw-data" class="section level1">
 <h1>Step 1: Reading in the raw data</h1>
@@ -394,7 +401,6 @@ div.tocify {
 <pre class="r"><code>raw_data &lt;- read.csv(&quot;./story_materials/data_exp_4424-v9_task-y5i7.csv&quot;)</code></pre>
 <p>It’s a good idea to preview the dataframe to check that things haven’t gone awry. The easiest way to do this is to use the viewer in RStudio (unless your dataset is huge). You can open the viewer by double-clicking the little grid icon next to dataframe in the Environment pane.</p>
 <p><img src="figures/tableview.png" /></p>
-<p>If you’d like to try processing this dataset yourself, you can find the files in the zip folder.</p>
 <hr />
 </div>
 <div id="step-2-using-filter-to-select-data-rows" class="section level1">
@@ -502,7 +508,7 @@ div.tocify {
          item = ANSWER,
          acc = Correct,
          RT = Reaction.Time)</code></pre>
-<p>Note that for each column, we have used <code>new_name = old_name</code> to assign the changes within the rename function, and separated each pair by a comma.</p>
+<p>Note that for each column, we have used <code>new_name = old_name</code> to assign the changes within the <code>rename()</code> function, and separated each pair by a comma.</p>
 </div>
 <div id="check-the-data-look-sensible-1" class="section level3">
 <h3>Check the data look sensible</h3>
@@ -559,9 +565,9 @@ div.tocify {
 <h1>Step 5: Saving the processed data</h1>
 <p>Now we have our trial level and participant level data, we can save these out as processed csv files. Doing so means that you won’t have to do your data processing at the start of each analysis script (you can read in the processed files directly), and you can more readily share these files on the Open Science Framework.</p>
 <p>To write out the data, we use the <code>write.csv()</code> function. We need to tell it the dataframe we want to save and the name we want to give it (<em>including</em> the file extension, <em>.csv</em>). Here, we have also included <code>row.names = FALSE</code> to stop R from automatically adding a column with row numbers.</p>
-<pre class="r"><code>write.csv(trial_data, &quot;trial_data.csv&quot;, row.names = FALSE)
-write.csv(participant_data, &quot;participant_averages.csv&quot;, row.names = FALSE)</code></pre>
-<p>I’ve also include <code>"./output/"</code> at the start of my file name, to save the files to an “output” folder.</p>
+<pre class="r"><code>write.csv(trial_data, &quot;./output/trial_data.csv&quot;, row.names = FALSE)
+write.csv(participant_data, &quot;./output/participant_averages.csv&quot;, row.names = FALSE)</code></pre>
+<p>I’ve also include <code>"./output/"</code> at the start of my file name, to save the files to the “output” folder in my working directory.</p>
 <hr />
 </div>
 <div id="summary" class="section level1">

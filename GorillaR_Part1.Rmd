@@ -9,6 +9,8 @@ options(Encoding="UTF-8")
 
 # Setting up
 
+### Loading the tidyverse 
+
 If you have not done so already, you will need to install the relevant packages, with the following line of code. You will only need to do this once on your computer (unless you require updates etc.). 
 
 ```{r eval = FALSE}
@@ -22,6 +24,10 @@ library(tidyverse)
 ```
 
 What have we loaded here? By loading the *tidyverse* library, we have actually loaded several packages, including *ggplot2* (the go-to package for plotting in R), *dplyr*, *tidyr*, *readr*, *purrr*, *tibble*, *stringr*, and *forcats*. Each of these packages contains a set of tools that you can draw upon to complete your tasks. We don't actually use all of them here, but loading the core *tidyverse* library is an easy way to make a lot of key functions available. There are also more specialist *tidyverse* packages that you can load in separately (see [here](https://www.tidyverse.org/packages/)) for working with particular kinds of data. 
+
+### Dummy data
+
+This tutorial is a step-by-step example that I hope you can apply to your own data. If you'd like to follow along with my data files, you can download them [here](https://github.com/emljames/GorillaR/blob/master/story_materials.zip).
 
 ***********************
 
@@ -44,8 +50,6 @@ It's a good idea to preview the dataframe to check that things haven't gone awry
 
 ![ ](figures/tableview.png)
 
-
-If you'd like to try processing this dataset yourself, you can find the files in the zip folder. 
 
 ***********************
 
@@ -154,7 +158,7 @@ trial_data <- trial_data %>%
          RT = Reaction.Time)
 ```
 
-Note that for each column, we have used `new_name = old_name` to assign the changes within the rename function, and separated each pair by a comma. 
+Note that for each column, we have used `new_name = old_name` to assign the changes within the `rename()` function, and separated each pair by a comma. 
 
 ### Check the data look sensible
 
@@ -207,11 +211,11 @@ Now we have our trial level and participant level data, we can save these out as
 To write out the data, we use the `write.csv()` function. We need to tell it the dataframe we want to save and the name we want to give it (*including* the file extension, *.csv*). Here, we have also included `row.names = FALSE` to stop R from automatically adding a column with row numbers. 
 
 ```{r eval = FALSE}
-write.csv(trial_data, "trial_data.csv", row.names = FALSE)
-write.csv(participant_data, "participant_averages.csv", row.names = FALSE)
+write.csv(trial_data, "./output/trial_data.csv", row.names = FALSE)
+write.csv(participant_data, "./output/participant_averages.csv", row.names = FALSE)
 ```
 
-I've also include `"./output/"` at the start of my file name, to save the files to an "output" folder.  
+I've also include `"./output/"` at the start of my file name, to save the files to the "output" folder in my working directory.  
 
 ***********************
 

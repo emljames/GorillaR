@@ -357,7 +357,7 @@ div.tocify {
   <a href="GorillaR_Part2.html">Part 2</a>
 </li>
 <li>
-  <a href="version.html">version Info</a>
+  <a href="version.html">Version Info</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -378,7 +378,7 @@ div.tocify {
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>In Part 1 of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:</p>
+<p>In <a href="https://emljames.github.io/GorillaR/GorillaR_Part1.html">Part 1</a> of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:</p>
 <ul>
 <li><code>read.csv()</code> to read in the data.</li>
 <li><code>filter()</code> to keep one row per trial, containing the participant response.</li>
@@ -391,7 +391,7 @@ div.tocify {
 <div id="preparing-for-this-tutorial" class="section level3">
 <h3>Preparing for this tutorial</h3>
 <p>If you want to follow along with this tutorial using the data files, you can pick up right where we left off after Part 1.</p>
-<p>If you no longer have the dataframes stored in your R session, you may wish to recap Part 1 as a reminder. Alternatively, we can re-load the processed data files that we saved at the end.</p>
+<p>If you no longer have the dataframes stored in your R session, you may wish to recap <a href="https://emljames.github.io/GorillaR/GorillaR_Part1.html">Part 1</a> as a reminder. Alternatively, we can re-load the processed data files that we saved at the end.</p>
 <pre class="r"><code>trial_data &lt;- read.csv(&quot;./output/trial_data.csv&quot;)
 participant_data &lt;- read.csv(&quot;./output/participant_averages.csv&quot;)</code></pre>
 <p>Make sure you have the <code>tidyverse</code> library loaded!</p>
@@ -423,7 +423,7 @@ items</code></pre>
 ## 13 tabric    one
 ## 14 pungus    one
 ## 15  rafar    one</code></pre>
-<p>I can then use the <code>item</code> column to merge it with the items in my trial level data.</p>
+<p>I can then use the <code>item</code> column to merge it with the items in my trial-level data.</p>
 <pre class="r"><code>trial_data_conds &lt;- trial_data %&gt;% 
   left_join(items, by = &quot;item&quot;)</code></pre>
 <p>Here, we’ve said to take the <code>trial_data</code> dataframe, and join it to the <code>items</code> dataframe using the <code>item</code> column common to both dataframes (i.e., it will match each row based on the content of the <code>item</code> column). Using <code>left_join</code> means that we want to keep all rows in the first dataframe we give to the argument (<code>trial_data</code>, fed into the function via the pipe). The second dataframe (<code>items</code>) will therefore be repeated across all matches.</p>
@@ -698,7 +698,7 @@ head(items_back)</code></pre>
 <li><code>pivot_wider()</code> and <code>pivot_longer()</code> to rearrange data between long and wide formats.</li>
 </ul>
 <p>We’ve also used <code>head()</code>, <code>count()</code>, and <code>nrow()</code> throughout to keep checking that our data processing looked sensible.</p>
-<p>Just as we saw at the end of the Part 1, using the pipe operator means that you can easily incorporate these steps into your data processing—feeding from one step to the next. All in one tidy and efficient block of code!</p>
+<p>Just as we saw at the <a href="https://emljames.github.io/GorillaR/GorillaR_Part1.html#putting_it_all_together_(in_one_easy_step)">end of Part 1</a>, using the pipe operator means that you can easily incorporate these steps into your data processing—feeding from one step to the next. All in one tidy and efficient block of code!</p>
 <div id="how-to-find-help" class="section level3">
 <h3>How to find help</h3>
 <p>If you get stuck with the material here, I encourage you to email me <a href="emma.james@york.ac.uk">emma.james@york.ac.uk</a>—I would appreciate the feedback in helping to make this material clearer and more accessible.</p>
