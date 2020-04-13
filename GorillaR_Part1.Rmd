@@ -1,18 +1,6 @@
 ---
 title: "Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
-  encoding=encoding,
-  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Emma James"
-date: "April 2020"
-output:
-  html_document:
-    toc: yes
-    toc_float:
-      collapsed: yes
-      smooth_scroll: yes
 ---
 
 ```{r echo = FALSE}

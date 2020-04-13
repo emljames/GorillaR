@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Emma James" />
+
+
+<title>Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">From Gorilla to Tidy Data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Tutorial Home</a>
+</li>
+<li>
+  <a href="GorillaR_Part1.html">Part 1</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps</h1>
+<h4 class="author">Emma James</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div id="outline" class="section level3">
+<h3>Outline</h3>
+<p>The aim of this tutorial is to provide an introduction to data manipulation in R, primarily using tools from the <a href="https://www.tidyverse.org/">tidyverse</a>. Given that lots of people are currently moving their data collection procedures online, we will use an output file from <a href="https://gorilla.sc/">Gorilla</a> as an example. However, the tools should readily apply regardless of your data collection software.</p>
+<p>In this first part of the tutorial, we will cover the basics of extracting the relevant data from your output files. In Part 2, we will cover some extra tips and tricks for monitoring sample size during online data collection, scaling up the tools to more complex datasets, and re-organising your data flexibly.</p>
+<p><em>Please note that this document is a first draft - please email comments and feedback to <a href="emma.james@york.ac.uk">emma.james@york.ac.uk</a>.</em></p>
+</div>
+<div id="knowledge-required" class="section level3">
+<h3>Knowledge required</h3>
+<p>This introduction is aimed at beginners, with very little experience coding in R.</p>
+<p>However, it does assume that you can find your way around R Studio (i.e., familiar with the script and console, how to run one/several lines of code), and navigate your working directory to access your data. A basic understanding of functions and arguments will also help. Some recommended resources on this are:</p>
+<ul>
+<li><a href="https://datacarpentry.org/r-socialsci/00-intro/index.html">Data Carpentries</a></li>
+<li><a href="https://r4ds.had.co.nz/workflow-basics.html">Introductory chapter in R for Data Science (Hadley Wickham)</a></li>
+</ul>
+<p>If you prefer some light interactive activities, you can also try:</p>
+<ul>
+<li><a href="https://www.datacamp.com/onboarding/create_account?track_id=11">DataCamp - R Onboarding</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-r">Codeacademy - R</a></li>
+</ul>
+</div>
+<div id="whats-this-tidyverse-you-speak-of" class="section level3">
+<h3>What’s this “tidyverse” you speak of?</h3>
+<p>As with most programming tasks, there are multiple different ways of achieving the same thing. Within the R programming language, there are some clusters of approaches (“dialects” or “grammars”, if you like). It’s not essential to acknowledge the difference - mostly you will settle for whatever tools you can get to work! However, you will see when searching your issues on <a href="https://stackexchange.com/">StackExchange</a> that many people provide alternative solutions, and will often refer to using <em>Base R</em>, the <em>tidyverse</em> (including <em>dplyr</em>, <em>tidyr</em> packages), and <em>data.table</em>. This document will focus on data manipulation using the <em>tidyverse</em>.</p>
+<p><strong>What are the pros?</strong></p>
+<ul>
+<li>Intuitive functions - they pretty much do what they say on the tin.<br />
+</li>
+<li>Readable and tidy - once you have understood a few key features (e.g., the pipe operator), it’s relatively easy to read an existing script and gauge what’s going on.<br />
+</li>
+<li>Efficient - you can carry out your data processing tasks in relatively few lines of code (as we will see here!)</li>
+<li>Wide usership - there is a huge amount of support available online.</li>
+</ul>
+<p><strong>…and the cons?</strong></p>
+<ul>
+<li>Coders transferring from different programming sometimes prefer base R operations, as they more directly relate to their existing knowledge.<br />
+</li>
+<li>Doesn’t handle big data as well (the <em>data.table</em> package is better suited to this). But I really do mean big data here (i.e., sourced from naturally occurring datasets), most experimental data should be fine.</li>
+</ul>
+<p>For me, learning to use the <em>tidyverse</em> took me from years of copying and pasting random bits of code from the internet, to being able to sit down and write a data processing script from scratch. I hope you’ll find it helpful too!</p>
+</div>
+</div>
+<div id="setting-up" class="section level1">
+<h1>Setting up</h1>
+<p>If you have not done so already, you will need to install the relevant packages, with the following line of code. You will only need to do this once on your computer (unless you require updates etc.).</p>
+<pre class="r"><code>install.packages(&quot;tidyverse&quot;)</code></pre>
+<p>Once you have the packages installed, you need to load them into your library. You need to do this at the start of every script, for every time you open R.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<p>What have we loaded here? By loading the <em>tidyverse</em> library, we have actually loaded several packages, including <em>ggplot2</em> (the go-to package for plotting in R), <em>dplyr</em>, <em>tidyr</em>, <em>readr</em>, <em>purrr</em>, <em>tibble</em>, <em>stringr</em>, and <em>forcats</em>. Each of these packages contains a set of tools that you can draw upon to complete your tasks. We don’t actually use all of them here, but loading the core <em>tidyverse</em> library is an easy way to make a lot of key functions available. There are also more specialist <em>tidyverse</em> packages that you can load in separately (see <a href="https://www.tidyverse.org/packages/">here</a>) for working with particular kinds of data.</p>
+</div>
+<div id="step-1-reading-in-the-raw-data" class="section level1">
+<h1>Step 1: Reading in the raw data</h1>
+<p>In this example, we will use an output file from a word-learning experiment programmed in Gorilla (currently unpublished data, further information available <a href="https://osf.io/stx6q/">here</a>). Gorilla spits out a different csv file for each task node in the experiment. For now, we will focus on reading in and processing data from a single task file, but we will cover how to combine data from multiple task files in Part 2.</p>
+<p>Each csv file from Gorilla is identified by the experiment code and version (the same for all of your output files, unless you had to set up a second version of the experiment), and the task ID at the end (a string of 4 alpha-numeric characters). You can match these up to your experiment by looking at your task builder.</p>
+<p><img src="figures/task-builder.PNG" /></p>
+<p>For this task, the corresponding data file is “data_exp_4424-v9_task-y5i7.csv”. We can read it into R using the <code>read.csv()</code> function. The assignment operator <code>&lt;-</code> means that we store the result as a dataframe in our environment. I have called the dataframe <code>raw_data</code>, but you could call it whatever you like.</p>
+<pre class="r"><code>raw_data &lt;- read.csv(&quot;./story_materials/data_exp_4424-v9_task-y5i7.csv&quot;)</code></pre>
+<p>It’s a good idea to preview the dataframe to check that things haven’t gone awry. The easiest way to do this is to use the viewer in RStudio (unless your dataset is huge). You can open the viewer by double-clicking the little grid icon next to dataframe in the Environment pane.</p>
+<p><img src="figures/tableview.png" /></p>
+<p>If you’d like to try processing this dataset yourself, you can find the files in the zip folder.</p>
+</div>
+<div id="step-2-using-filter-to-select-data-rows" class="section level1">
+<h1>Step 2: Using <code>filter()</code> to select data rows</h1>
+<div id="identify-the-data" class="section level3">
+<h3>Identify the data</h3>
+<p>If you open your csv file (using e.g., Excel), you will see that Gorilla provides you with a row for each screen that a participant sees. Depending on your experiment, this could mean that there are multiple output rows for a single experimental trial. Scroll the columns and try to identify which rows contain the data you need—usually collected from a response zone. If you’ve been thorough in your Gorilla set-up and named all of your screens thoroughly this might be easy. If you’re like me and haven’t bothered, you will have lots of rows that are unhelpfully named as “Screen 1”, “Screen 2” etc. So look for the rows that contain your response data in some appropriate-looking columns!</p>
+<p><img src="figures/data-rows.PNG" /></p>
+<p>The task we’re using here is a 4-alternative-forced-choice task: participants were presented with a picture and were asked to select which of 4 pseudowords was its name in a story they had listened to. The participant could click each item to hear the associated audio files, and Gorilla keeps a record of whether they have done this. As a result, there are varying numbers of rows for each trial. However, each trial ended with the participant pressing a response button to make their selection, and so we can use the <code>response_button_text</code> in the Zone Type column to identify each response.</p>
+<p><em>Note, some experimental software (or your programming of it) will leave you with a single row per trial to start with. If this is the case, you can skip to <a href="#step3">Step 3</a>!</em></p>
+</div>
+<div id="subset-the-dataframe" class="section level3">
+<h3>Subset the dataframe</h3>
+<p>Once you’ve identified the rows that contain data, you’ll want to get rid of the rows you don’t need. If you’re used to processing your data in Excel, this step is similar to filtering your data in a table; or in SPSS, it’s like ‘Select Cases’.</p>
+<p>Here, we see the pipe operator for the first time, <code>%&gt;%</code>. The pipe takes the information from the left of it, and feeds it into the next function. You can read the pipe in your head as saying <em>“and then…”</em>.</p>
+<p>We use the <code>filter()</code> function to select the rows with our response data. We need to tell it which column to look in (here we can select by Zone Type), and then which values it needs to match. Note that R doesn’t like spaces in column names, so it might have read in your column names slightly differently to how you see them when you open them in Excel. You can double check this by inspecting the dataframe within RStudio viewer, or by using the command <code>names(raw_data)</code> to print out the column names.</p>
+<pre class="r"><code>raw_data &lt;- raw_data %&gt;% 
+  filter(Zone.Type == &quot;response_button_text&quot;)</code></pre>
+<p>So all in all, we have said here that we want to re-assign (<code>&lt;-</code>) the <code>raw_data</code> object by: taking the existing <code>raw_data</code>; <em>and then</em> applying a filter to keep only the rows with <code>"response_button_text"</code> in the <code>Zone.Type</code> column.</p>
+</div>
+<div id="check-the-data-look-sensible" class="section level3">
+<h3>Check the data look sensible</h3>
+<p>Now we have narrowed down the dataset, we expect to have one row per trial, per participant. We can check this by counting how many trials we have per participant.</p>
+<pre class="r"><code>raw_data %&gt;%                             
+  group_by(Participant.Private.ID) %&gt;%    
+  count()             </code></pre>
+<pre><code>## # A tibble: 52 x 2
+## # Groups:   Participant.Private.ID [52]
+##    Participant.Private.ID     n
+##                     &lt;int&gt; &lt;int&gt;
+##  1                 508739    15
+##  2                 508745    15
+##  3                 508749    15
+##  4                 508754    15
+##  5                 508757    15
+##  6                 508942    15
+##  7                 510444    15
+##  8                 510447    15
+##  9                 510457    15
+## 10                 510463    15
+## # ... with 42 more rows</code></pre>
+<p>We’ve introduced two new functions here: <code>group_by()</code> and <code>count()</code>. This is what we have said:</p>
+<ul>
+<li>Take the dataframe <code>raw_data</code> - <em>AND THEN…</em><br />
+</li>
+<li><code>group_by</code> - this means we want R to perform the operation separately for each participant (labelled in the column called <code>Participant.Private.ID</code>) - <em>AND THEN…</em></li>
+<li><code>count</code> - we are asking R to count the number of rows. Because its input is the grouped data by participant (from the row above), it will count the number of rows per participant.</li>
+</ul>
+<p>If we have processed the data correctly, the number of rows per participant should match the number of trials that each participant completed in this task. In this task, participants were tested on their memory for 15 different pseudowords that they heard in the story, so this seems to make sense. If the number of rows and trials do not correspond when processing your own data, you should look back at the data and try again.</p>
+<p>Note that we haven’t used the assignment operator here, so R will just print out the values to the console. If things look odd or you want to explore further, you could assign it to a new dataframe using the <code>&lt;-</code>, as we did above.</p>
+<pre class="r"><code>trial_count &lt;- raw_data %&gt;% 
+  group_by(Participant.Private.ID) %&gt;% 
+  count()</code></pre>
+<p>You should now see that a new dataframe called <code>trial_count</code> has appeared in your RStudio environment window. You can open it in the viewer to explore it manually if you prefer.</p>
+<p><em>Note that we use <code>Participant.Private.ID</code> here as the anonymised ID provided by Gorilla. If recruiting via Prolific, the <code>Participant.Public.ID</code> column will include their Prolific ID, and you may wish to use this initially to check for task compliance/approving submissions.</em></p>
+</div>
+</div>
+<div id="step3" class="section level1">
+<h1>Step 3: Using <code>select()</code> and <code>rename()</code> to retain key variables</h1>
+<p>OK, so we’ve narrowed down the dataset somewhat, but Gorilla has also given us lots of information that—whilst useful—we don’t need for our main data analysis. How many columns you have depends on how you have set up your experiment, but you can see we have a lot here by printing out the column names.</p>
+<pre class="r"><code>names(raw_data)</code></pre>
+<pre><code>##  [1] &quot;Event.Index&quot;                     &quot;UTC.Timestamp&quot;                   &quot;UTC.Date&quot;                       
+##  [4] &quot;Local.Timestamp&quot;                 &quot;Local.Timezone&quot;                  &quot;Local.Date&quot;                     
+##  [7] &quot;Experiment.ID&quot;                   &quot;Experiment.Version&quot;              &quot;Tree.Node.Key&quot;                  
+## [10] &quot;Repeat.Key&quot;                      &quot;Schedule.ID&quot;                     &quot;Participant.Public.ID&quot;          
+## [13] &quot;Participant.Private.ID&quot;          &quot;Participant.Starting.Group&quot;      &quot;Participant.Status&quot;             
+## [16] &quot;Participant.Completion.Code&quot;     &quot;Participant.External.Session.ID&quot; &quot;Participant.Device.Type&quot;        
+## [19] &quot;Participant.Device&quot;              &quot;Participant.OS&quot;                  &quot;Participant.Browser&quot;            
+## [22] &quot;Participant.Monitor.Size&quot;        &quot;Participant.Viewport.Size&quot;       &quot;Checkpoint&quot;                     
+## [25] &quot;Task.Name&quot;                       &quot;Task.Version&quot;                    &quot;checkpoint.eqdz&quot;                
+## [28] &quot;checkpoint.cuki&quot;                 &quot;branch.m64g&quot;                     &quot;branch.jfu9&quot;                    
+## [31] &quot;branch.n4qm&quot;                     &quot;branch.vz7v&quot;                     &quot;randomiser.q5z8&quot;                
+## [34] &quot;branch.gyqg&quot;                     &quot;branch.lrfh&quot;                     &quot;checkpoint.pq3t&quot;                
+## [37] &quot;checkpoint.p1b9&quot;                 &quot;checkpoint.353x&quot;                 &quot;checkpoint.cbnt&quot;                
+## [40] &quot;branch.pusb&quot;                     &quot;Trial.Number&quot;                    &quot;Screen.Number&quot;                  
+## [43] &quot;Screen.Name&quot;                     &quot;Zone.Name&quot;                       &quot;Zone.Type&quot;                      
+## [46] &quot;Reaction.Time&quot;                   &quot;Response&quot;                        &quot;Attempt&quot;                        
+## [49] &quot;Correct&quot;                         &quot;Incorrect&quot;                       &quot;Dishonest&quot;                      
+## [52] &quot;X.Coordinate&quot;                    &quot;Y.Coordinate&quot;                    &quot;Timed.Out&quot;                      
+## [55] &quot;Spreadsheet.Name&quot;                &quot;randomise_blocks&quot;                &quot;randomise_trials&quot;               
+## [58] &quot;display&quot;                         &quot;ANSWER&quot;                          &quot;picture&quot;                        
+## [61] &quot;opt1&quot;                            &quot;opt2&quot;                            &quot;opt3&quot;                           
+## [64] &quot;opt4&quot;                            &quot;aud1&quot;                            &quot;aud2&quot;                           
+## [67] &quot;aud3&quot;                            &quot;aud4&quot;</code></pre>
+<div id="select-key-variables" class="section level3">
+<h3>Select key variables</h3>
+<p>We only need a few of these, so we can select relevant columns by name, using the <code>select()</code> function. Again, you might want to peruse your dataset in Excel to help you identify where your data are stored.</p>
+<p>Let’s re-assign our columns to a new dataframe, <code>trial_data</code>, for storing our processed trial-level data.</p>
+<pre class="r"><code>trial_data &lt;- raw_data %&gt;% 
+  select(Participant.Private.ID, ANSWER, Correct, Reaction.Time)</code></pre>
+<p>Here, we’ve selected the variables that represent the participant’s ID (<code>Participant.Private.ID</code>), the correct answer for that trial (<code>ANSWER</code>), whether the participant selected the correct answer (<code>Correct</code>), and how long it took them to make the decision (<code>Reaction.Time</code>).</p>
+<p>This is just like the process of copying/pasting relevant data in other software, except we are never deleting any data, and it’s instantaneous to re-run the data extraction if we realise we want to do something differently.</p>
+</div>
+<div id="rename-your-variables" class="section level3">
+<h3>Rename your variables</h3>
+<p>Some of the column names are not very informative for our purposes, or are a bit long.</p>
+<p>If you don’t have many columns and want to rename everything, you can use the <code>set_names()</code> function. There are multiple columns to rename, so we have to give <code>set_names()</code> a <em>list</em> of column names. To do that, we need to wrap our chosen names inside the <code>c()</code> function to combine them. Without the <code>c()</code> function, <code>set_names()</code> would try to interpret each of the words as a separate argument, rather than reading them altogether as your chosen names.</p>
+<pre class="r"><code>trial_data &lt;- trial_data %&gt;% 
+  set_names(c(&quot;ID&quot;, &quot;item&quot;, &quot;acc&quot;, &quot;RT&quot;))</code></pre>
+<p>Using <code>set_names()</code> will rename each column in order, so check that you get this right!</p>
+<p>Alternatively, if you just want to rename one or two of the variables, you can use the <code>rename()</code> function to map each old name to a new name. This method involves more typing, but is less error-prone if you find yourself adding more columns later down the line, and/or they end up in a different order. More laborious, but more fool-proof!</p>
+<pre class="r"><code>trial_data &lt;- trial_data %&gt;% 
+  rename(ID = Participant.Private.ID,
+         item = ANSWER,
+         acc = Correct,
+         RT = Reaction.Time)</code></pre>
+<p>Note that for each column, we have used <code>new_name = old_name</code> to assign the changes within the rename function, and separated each pair by a comma.</p>
+</div>
+<div id="check-the-data-look-sensible-1" class="section level3">
+<h3>Check the data look sensible</h3>
+<p>Again, we can carry out quick checks to make sure we’ve not done anything stupid. Here, we can just print out the first few rows of the dataframe to check that the column names and data look as we want. The <code>head()</code> function lets us do this easily.</p>
+<pre class="r"><code>head(trial_data)</code></pre>
+<pre><code>##       ID   item acc      RT
+## 1 508739 vorgal   0 14449.2
+## 2 508739  mowel   1  8980.6
+## 3 508739 peflin   1  3813.7
+## 4 508739 dester   0  6945.2
+## 5 508739  wabon   1 12621.1
+## 6 508739 ballow   0  6757.5</code></pre>
+</div>
+</div>
+<div id="step-4-computing-participant-level-averages-using-summarise" class="section level1">
+<h1>Step 4: Computing participant-level averages using <code>summarise()</code></h1>
+<div id="compute-a-mean-score-for-each-participant" class="section level3">
+<h3>Compute a mean score for each participant</h3>
+<p>For some types of analyses, we will want to use just one score per participant, averaged across all trials. Now we have our tidied and processed trial-level data, we can use <code>summarise()</code> to calculate participant means. Because we want one score per participant, we pass it through the <code>group_by()</code> function first, as we did when we counted trial numbers earlier.</p>
+<pre class="r"><code>participant_data &lt;- trial_data %&gt;% 
+  group_by(ID) %&gt;% 
+  summarise(meanAcc = mean(acc), 
+            meanRT = mean(RT, na.rm = TRUE))</code></pre>
+<p>This can be read as follows:</p>
+<ul>
+<li>Create the output <code>participant_data</code> by…<br />
+</li>
+<li>Taking the <code>trial_data</code> dataframe, <em>AND THEN…</em><br />
+</li>
+<li>Grouping by each participant <code>ID</code>, <em>AND THEN…</em></li>
+<li>Computing some summary data: we use the format <code>column_name = operation</code> to compute each statistic, with each set separated by a comma. We create a column called <code>meanAcc</code> by calculating a mean of the participant’s accuracy data (<code>mean(acc)</code>), and a column called <code>meanRT</code> by calculating the mean of the RT data. By stating <code>na.rm = TRUE</code> within the <code>mean()</code> function, we tell R to ignore rows with missing data. If you have missing data and don’t specify this, R will return <code>NA</code> for the mean as a result.</li>
+</ul>
+<p><em>(Note, the RT data is actually not useful for this experiment, but included for demonstration purposes)</em></p>
+</div>
+<div id="check-the-data-look-sensible-2" class="section level3">
+<h3>Check the data look sensible</h3>
+<p>Again, let’s check that we have a sensible output, by printing the top of the dataframe.</p>
+<pre class="r"><code>head(participant_data)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##       ID meanAcc meanRT
+##    &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 508739   0.467  7072.
+## 2 508745   0.6    4387.
+## 3 508749   0.867  5046.
+## 4 508754   0.533  6042.
+## 5 508757   1      5345.
+## 6 508942   0.6    4281.</code></pre>
+<p>You can see now that we have just one accuracy score and one RT score for each participant ID. If this is your first time processing your data, you could also check this manually on one or two participants to check the data are as you expect.</p>
+</div>
+</div>
+<div id="step-5-saving-the-processed-data" class="section level1">
+<h1>Step 5: Saving the processed data</h1>
+<p>Now we have our trial level and participant level data, we can save these out as processed csv files. Doing so means that you won’t have to do your data processing at the start of each analysis script (you can read in the processed files directly), and you can more readily share these files on the Open Science Framework.</p>
+<p>To write out the data, we use the <code>write.csv()</code> function. We need to tell it the dataframe we want to save and the name we want to give it (<em>including</em> the file extension, <em>.csv</em>). Here, we have also included <code>row.names = FALSE</code> to stop R from automatically adding a column with row numbers.</p>
+<pre class="r"><code>write.csv(trial_data, &quot;trial_data.csv&quot;, row.names = FALSE)
+write.csv(participant_data, &quot;participant_averages.csv&quot;, row.names = FALSE)</code></pre>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<div id="recap" class="section level3">
+<h3>Recap</h3>
+<p>I hope you have seen that the <em>tidyverse</em> tools can be helpful in efficiently processing new datasets. In this example, we used the following functions to process our data:</p>
+<ul>
+<li><code>read.csv()</code> to read in the data.</li>
+<li><code>filter()</code> to keep one row per trial, containing the participant response.</li>
+<li><code>select()</code> to keep the relevant columns.</li>
+<li><code>set_names()</code> or <code>rename()</code> to name the columns in a more intuitive way.</li>
+<li><code>group_by()</code> and <code>summarise()</code> to calculate summary statistics for each participant. These are also useful when producing descriptive statistics across the whole sample.</li>
+</ul>
+<p>We also used <code>head()</code> and <code>count()</code> to keep checking that our data processing looked sensible.</p>
+</div>
+<div id="putting-it-all-together-in-one-easy-step" class="section level3">
+<h3>Putting it all together (in one easy step!)</h3>
+<p>Throughout this example, we have broken down the processing steps to learn what each function does. However, the joy of the <em>tidyverse</em> and the pipe operator is that we can actually do this all in one fell swoop. Whilst it makes sense to build up your data processing bit by bit and carry out checks along the way, the final product can be much shorter.</p>
+<pre class="r"><code>processed_data &lt;- read.csv(&quot;./story_materials/data_exp_4424-v9_task-y5i7.csv&quot;) %&gt;% 
+  filter(Zone.Type == &quot;response_button_text&quot;) %&gt;%
+  select(Participant.Private.ID, ANSWER, Correct, Reaction.Time) %&gt;% 
+  set_names(c(&quot;ID&quot;, &quot;item&quot;, &quot;acc&quot;, &quot;RT&quot;)) %&gt;% 
+  group_by(ID) %&gt;% 
+  summarise(meanAcc = mean(acc), meanRT = mean(RT, na.rm = TRUE))</code></pre>
+<p>And that’s it! From experiment output to cleaned processed data in just 6 lines of code and a few seconds (or 4 lines if you want to stick with trial level data). By scripting your data processing in this way, it will help to keep on top of data as it comes in—you can re-run the script on your most recent data file in no time at all.</p>
+</div>
+<div id="onwards-to-part-2" class="section level3">
+<h3>Onwards to Part 2…</h3>
+<p>In Part 2 of this tutorial, we will learn how to use these tools when working with more complex datasets: those with more conditions, and those that need combining across several files or perhaps even several tasks. We’ll also cover how to build in an eligibility check for keeping track of your sample size as it comes in, and how to re-arrange your data for different purposes.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
