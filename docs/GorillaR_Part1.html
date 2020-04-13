@@ -464,39 +464,28 @@ div.tocify {
 <h1>Step 3: Using <code>select()</code> and <code>rename()</code> to retain key variables</h1>
 <p>OK, so we’ve narrowed down the dataset somewhat, but Gorilla has also given us lots of information that—whilst useful—we don’t need for our main data analysis. How many columns you have depends on how you have set up your experiment, but you can see we have a lot here by printing out the column names.</p>
 <pre class="r"><code>names(raw_data)</code></pre>
-<pre><code>##  [1] &quot;Event.Index&quot;                     &quot;UTC.Timestamp&quot;                  
-##  [3] &quot;UTC.Date&quot;                        &quot;Local.Timestamp&quot;                
-##  [5] &quot;Local.Timezone&quot;                  &quot;Local.Date&quot;                     
-##  [7] &quot;Experiment.ID&quot;                   &quot;Experiment.Version&quot;             
-##  [9] &quot;Tree.Node.Key&quot;                   &quot;Repeat.Key&quot;                     
-## [11] &quot;Schedule.ID&quot;                     &quot;Participant.Public.ID&quot;          
-## [13] &quot;Participant.Private.ID&quot;          &quot;Participant.Starting.Group&quot;     
-## [15] &quot;Participant.Status&quot;              &quot;Participant.Completion.Code&quot;    
-## [17] &quot;Participant.External.Session.ID&quot; &quot;Participant.Device.Type&quot;        
-## [19] &quot;Participant.Device&quot;              &quot;Participant.OS&quot;                 
-## [21] &quot;Participant.Browser&quot;             &quot;Participant.Monitor.Size&quot;       
-## [23] &quot;Participant.Viewport.Size&quot;       &quot;Checkpoint&quot;                     
-## [25] &quot;Task.Name&quot;                       &quot;Task.Version&quot;                   
-## [27] &quot;checkpoint.eqdz&quot;                 &quot;checkpoint.cuki&quot;                
-## [29] &quot;branch.m64g&quot;                     &quot;branch.jfu9&quot;                    
-## [31] &quot;branch.n4qm&quot;                     &quot;branch.vz7v&quot;                    
-## [33] &quot;randomiser.q5z8&quot;                 &quot;branch.gyqg&quot;                    
-## [35] &quot;branch.lrfh&quot;                     &quot;checkpoint.pq3t&quot;                
-## [37] &quot;checkpoint.p1b9&quot;                 &quot;checkpoint.353x&quot;                
-## [39] &quot;checkpoint.cbnt&quot;                 &quot;branch.pusb&quot;                    
-## [41] &quot;Trial.Number&quot;                    &quot;Screen.Number&quot;                  
-## [43] &quot;Screen.Name&quot;                     &quot;Zone.Name&quot;                      
-## [45] &quot;Zone.Type&quot;                       &quot;Reaction.Time&quot;                  
-## [47] &quot;Response&quot;                        &quot;Attempt&quot;                        
-## [49] &quot;Correct&quot;                         &quot;Incorrect&quot;                      
-## [51] &quot;Dishonest&quot;                       &quot;X.Coordinate&quot;                   
-## [53] &quot;Y.Coordinate&quot;                    &quot;Timed.Out&quot;                      
-## [55] &quot;Spreadsheet.Name&quot;                &quot;randomise_blocks&quot;               
-## [57] &quot;randomise_trials&quot;                &quot;display&quot;                        
-## [59] &quot;ANSWER&quot;                          &quot;picture&quot;                        
-## [61] &quot;opt1&quot;                            &quot;opt2&quot;                           
-## [63] &quot;opt3&quot;                            &quot;opt4&quot;                           
-## [65] &quot;aud1&quot;                            &quot;aud2&quot;                           
+<pre><code>##  [1] &quot;Event.Index&quot;                     &quot;UTC.Timestamp&quot;                   &quot;UTC.Date&quot;                       
+##  [4] &quot;Local.Timestamp&quot;                 &quot;Local.Timezone&quot;                  &quot;Local.Date&quot;                     
+##  [7] &quot;Experiment.ID&quot;                   &quot;Experiment.Version&quot;              &quot;Tree.Node.Key&quot;                  
+## [10] &quot;Repeat.Key&quot;                      &quot;Schedule.ID&quot;                     &quot;Participant.Public.ID&quot;          
+## [13] &quot;Participant.Private.ID&quot;          &quot;Participant.Starting.Group&quot;      &quot;Participant.Status&quot;             
+## [16] &quot;Participant.Completion.Code&quot;     &quot;Participant.External.Session.ID&quot; &quot;Participant.Device.Type&quot;        
+## [19] &quot;Participant.Device&quot;              &quot;Participant.OS&quot;                  &quot;Participant.Browser&quot;            
+## [22] &quot;Participant.Monitor.Size&quot;        &quot;Participant.Viewport.Size&quot;       &quot;Checkpoint&quot;                     
+## [25] &quot;Task.Name&quot;                       &quot;Task.Version&quot;                    &quot;checkpoint.eqdz&quot;                
+## [28] &quot;checkpoint.cuki&quot;                 &quot;branch.m64g&quot;                     &quot;branch.jfu9&quot;                    
+## [31] &quot;branch.n4qm&quot;                     &quot;branch.vz7v&quot;                     &quot;randomiser.q5z8&quot;                
+## [34] &quot;branch.gyqg&quot;                     &quot;branch.lrfh&quot;                     &quot;checkpoint.pq3t&quot;                
+## [37] &quot;checkpoint.p1b9&quot;                 &quot;checkpoint.353x&quot;                 &quot;checkpoint.cbnt&quot;                
+## [40] &quot;branch.pusb&quot;                     &quot;Trial.Number&quot;                    &quot;Screen.Number&quot;                  
+## [43] &quot;Screen.Name&quot;                     &quot;Zone.Name&quot;                       &quot;Zone.Type&quot;                      
+## [46] &quot;Reaction.Time&quot;                   &quot;Response&quot;                        &quot;Attempt&quot;                        
+## [49] &quot;Correct&quot;                         &quot;Incorrect&quot;                       &quot;Dishonest&quot;                      
+## [52] &quot;X.Coordinate&quot;                    &quot;Y.Coordinate&quot;                    &quot;Timed.Out&quot;                      
+## [55] &quot;Spreadsheet.Name&quot;                &quot;randomise_blocks&quot;                &quot;randomise_trials&quot;               
+## [58] &quot;display&quot;                         &quot;ANSWER&quot;                          &quot;picture&quot;                        
+## [61] &quot;opt1&quot;                            &quot;opt2&quot;                            &quot;opt3&quot;                           
+## [64] &quot;opt4&quot;                            &quot;aud1&quot;                            &quot;aud2&quot;                           
 ## [67] &quot;aud3&quot;                            &quot;aud4&quot;</code></pre>
 <div id="select-key-variables" class="section level3">
 <h3>Select key variables</h3>
