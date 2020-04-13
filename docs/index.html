@@ -354,6 +354,9 @@ div.tocify {
 <li>
   <a href="GorillaR_Part1.html">Part 1</a>
 </li>
+<li>
+  <a href="GorillaR_Part2.html">Part 2</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -372,7 +375,76 @@ div.tocify {
 </div>
 
 
-
+<div id="outline" class="section level3">
+<h3>Outline</h3>
+<p>The aim of this tutorial is to provide an introduction to data manipulation in R, primarily using tools from the <a href="https://www.tidyverse.org/">tidyverse</a>. Given that lots of people are currently moving their data collection procedures online, we will use an output file from <a href="https://gorilla.sc/">Gorilla</a> as an example. However, the tools should readily apply regardless of your data collection software.</p>
+<p>In this first part of the tutorial, we will cover the basics of extracting the relevant data from your output files. In Part 2, we will cover some extra tips and tricks for monitoring sample size during online data collection, scaling up the tools to more complex datasets, and re-organising your data flexibly.</p>
+</div>
+<div id="knowledge-required" class="section level3">
+<h3>Knowledge required</h3>
+<p>This introduction is aimed at beginners, with very little experience coding in R.</p>
+<p>However, it does assume that you can find your way around R Studio (i.e., familiar with the script and console, how to run one/several lines of code), and navigate your working directory to access your data. A basic understanding of functions and arguments will also help. Some recommended resources on this are:</p>
+<ul>
+<li><a href="https://datacarpentry.org/r-socialsci/00-intro/index.html">Data Carpentries</a></li>
+<li><a href="https://r4ds.had.co.nz/workflow-basics.html">Introductory chapter in R for Data Science (Hadley Wickham)</a></li>
+</ul>
+<p>If you prefer some light interactive activities, you can also try:</p>
+<ul>
+<li><a href="https://www.datacamp.com/onboarding/create_account?track_id=11">DataCamp - R Onboarding</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-r">Codeacademy - R</a></li>
+</ul>
+</div>
+<div id="whats-this-tidyverse-you-speak-of" class="section level3">
+<h3>What’s this “tidyverse” you speak of?</h3>
+<p>As with most programming tasks, there are multiple different ways of achieving the same thing. Within the R programming language, there are some clusters of approaches (“dialects” or “grammars”, if you like). It’s not essential to acknowledge the difference - mostly you will settle for whatever tools you can get to work! However, you will see when searching your issues on <a href="https://stackexchange.com/">StackExchange</a> that many people provide alternative solutions, and will often refer to using <em>Base R</em>, the <em>tidyverse</em> (including <em>dplyr</em>, <em>tidyr</em> packages), and <em>data.table</em>. This document will focus on data manipulation using the <em>tidyverse</em>.</p>
+<p><strong>What are the pros?</strong></p>
+<ul>
+<li>Intuitive functions - they pretty much do what they say on the tin.<br />
+</li>
+<li>Readable and tidy - once you have understood a few key features (e.g., the pipe operator), it’s relatively easy to read an existing script and gauge what’s going on.<br />
+</li>
+<li>Efficient - you can carry out your data processing tasks in relatively few lines of code (as we will see here!)</li>
+<li>Wide usership - there is a huge amount of support available online.</li>
+</ul>
+<p><strong>…and the cons?</strong></p>
+<ul>
+<li>Coders transferring from different programming sometimes prefer base R operations, as they more directly relate to their existing knowledge.<br />
+</li>
+<li>Doesn’t handle big data as well (the <em>data.table</em> package is better suited to this). But I really do mean big data here (i.e., sourced from naturally occurring datasets), most experimental data should be fine.</li>
+</ul>
+<p>For me, learning to use the <em>tidyverse</em> took me from years of copying and pasting random bits of code from the internet, to being able to sit down and write a data processing script from scratch. I hope you’ll find it helpful too!</p>
+<hr />
+<p><strong>Acknowledgements:</strong></p>
+<p>Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial. Please email any additional feedback to <a href="emma.james@york.ac.uk">emma.james@york.ac.uk</a>.</p>
+<p><strong>Package information:</strong></p>
+<p>This tutorial was created using the following package versions:</p>
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 17134)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252
+## [4] LC_NUMERIC=C                            LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] forcats_0.5.0   stringr_1.4.0   dplyr_0.8.5     purrr_0.3.3     readr_1.3.1     tidyr_1.0.2     tibble_2.1.3    ggplot2_3.3.0  
+## [9] tidyverse_1.3.0
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.0.0 xfun_0.12        haven_2.2.0      lattice_0.20-38  colorspace_1.4-1 vctrs_0.2.4      generics_0.0.2  
+##  [8] htmltools_0.4.0  yaml_2.2.1       utf8_1.1.4       rlang_0.4.5      pillar_1.4.3     withr_2.1.2      glue_1.3.2      
+## [15] DBI_1.1.0        dbplyr_1.4.2     modelr_0.1.6     readxl_1.3.1     lifecycle_0.2.0  munsell_0.5.0    gtable_0.3.0    
+## [22] cellranger_1.1.0 rvest_0.3.5      evaluate_0.14    knitr_1.28       fansi_0.4.1      broom_0.5.5      Rcpp_1.0.3      
+## [29] backports_1.1.5  scales_1.1.0     jsonlite_1.6.1   fs_1.3.2         hms_0.5.3        packrat_0.5.0    digest_0.6.25   
+## [36] stringi_1.4.6    grid_3.6.0       cli_2.0.2        tools_3.6.0      magrittr_1.5     crayon_1.3.4     pkgconfig_2.0.3 
+## [43] rsconnect_0.8.16 xml2_1.2.5       reprex_0.3.0     lubridate_1.7.4  assertthat_0.2.1 rmarkdown_2.1    httr_1.4.1      
+## [50] rstudioapi_0.11  R6_2.4.1         nlme_3.1-139     compiler_3.6.0</code></pre>
+</div>
 
 
 

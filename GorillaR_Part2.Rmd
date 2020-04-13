@@ -1,6 +1,5 @@
 ---
 title: "Part 2: From Gorilla to Tidy Data, and then some"
-author: "Emma James"
 ---
 
 ```{r echo = FALSE}
@@ -337,17 +336,3 @@ More broadly speaking, there are some key sources of help when you get stuck wit
 
 On that last note, I wish to provide a final reassurance to **embrace the errors** and the warnings. Sometimes they are warnings that you can choose to ignore (as we did above when binding the dataframes), but they are useful to investigate if things aren't turning out as you expect. These are readily copy and pasted into Google, where you can find more information to understand it better. It *doesn't* mean that you've broken R!
 
-
-***********************
-
-**Acknowledgements:**
-
-Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial.
-
-**Package information:**
-
-This tutorial was created using the following package versions:
-
-```{r echo = FALSE}
-sessionInfo()
-```

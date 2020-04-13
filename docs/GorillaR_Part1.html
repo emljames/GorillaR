@@ -9,7 +9,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Emma James" />
 
 
 <title>Part 1: From Gorilla to Tidy Data in 5 Easy Steps</title>
@@ -354,6 +353,9 @@ div.tocify {
 <li>
   <a href="GorillaR_Part1.html">Part 1</a>
 </li>
+<li>
+  <a href="GorillaR_Part2.html">Part 2</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -367,54 +369,10 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Part 1: From Gorilla to Tidy Data in 5 Easy Steps</h1>
-<h4 class="author">Emma James</h4>
 
 </div>
 
 
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
-<div id="outline" class="section level3">
-<h3>Outline</h3>
-<p>The aim of this tutorial is to provide an introduction to data manipulation in R, primarily using tools from the <a href="https://www.tidyverse.org/">tidyverse</a>. Given that lots of people are currently moving their data collection procedures online, we will use an output file from <a href="https://gorilla.sc/">Gorilla</a> as an example. However, the tools should readily apply regardless of your data collection software.</p>
-<p>In this first part of the tutorial, we will cover the basics of extracting the relevant data from your output files. In Part 2, we will cover some extra tips and tricks for monitoring sample size during online data collection, scaling up the tools to more complex datasets, and re-organising your data flexibly.</p>
-<p><em>Please note that this document is a first draft - please email comments and feedback to <a href="emma.james@york.ac.uk">emma.james@york.ac.uk</a>.</em></p>
-</div>
-<div id="knowledge-required" class="section level3">
-<h3>Knowledge required</h3>
-<p>This introduction is aimed at beginners, with very little experience coding in R.</p>
-<p>However, it does assume that you can find your way around R Studio (i.e., familiar with the script and console, how to run one/several lines of code), and navigate your working directory to access your data. A basic understanding of functions and arguments will also help. Some recommended resources on this are:</p>
-<ul>
-<li><a href="https://datacarpentry.org/r-socialsci/00-intro/index.html">Data Carpentries</a></li>
-<li><a href="https://r4ds.had.co.nz/workflow-basics.html">Introductory chapter in R for Data Science (Hadley Wickham)</a></li>
-</ul>
-<p>If you prefer some light interactive activities, you can also try:</p>
-<ul>
-<li><a href="https://www.datacamp.com/onboarding/create_account?track_id=11">DataCamp - R Onboarding</a></li>
-<li><a href="https://www.codecademy.com/learn/learn-r">Codeacademy - R</a></li>
-</ul>
-</div>
-<div id="whats-this-tidyverse-you-speak-of" class="section level3">
-<h3>What’s this “tidyverse” you speak of?</h3>
-<p>As with most programming tasks, there are multiple different ways of achieving the same thing. Within the R programming language, there are some clusters of approaches (“dialects” or “grammars”, if you like). It’s not essential to acknowledge the difference - mostly you will settle for whatever tools you can get to work! However, you will see when searching your issues on <a href="https://stackexchange.com/">StackExchange</a> that many people provide alternative solutions, and will often refer to using <em>Base R</em>, the <em>tidyverse</em> (including <em>dplyr</em>, <em>tidyr</em> packages), and <em>data.table</em>. This document will focus on data manipulation using the <em>tidyverse</em>.</p>
-<p><strong>What are the pros?</strong></p>
-<ul>
-<li>Intuitive functions - they pretty much do what they say on the tin.<br />
-</li>
-<li>Readable and tidy - once you have understood a few key features (e.g., the pipe operator), it’s relatively easy to read an existing script and gauge what’s going on.<br />
-</li>
-<li>Efficient - you can carry out your data processing tasks in relatively few lines of code (as we will see here!)</li>
-<li>Wide usership - there is a huge amount of support available online.</li>
-</ul>
-<p><strong>…and the cons?</strong></p>
-<ul>
-<li>Coders transferring from different programming sometimes prefer base R operations, as they more directly relate to their existing knowledge.<br />
-</li>
-<li>Doesn’t handle big data as well (the <em>data.table</em> package is better suited to this). But I really do mean big data here (i.e., sourced from naturally occurring datasets), most experimental data should be fine.</li>
-</ul>
-<p>For me, learning to use the <em>tidyverse</em> took me from years of copying and pasting random bits of code from the internet, to being able to sit down and write a data processing script from scratch. I hope you’ll find it helpful too!</p>
-</div>
-</div>
 <div id="setting-up" class="section level1">
 <h1>Setting up</h1>
 <p>If you have not done so already, you will need to install the relevant packages, with the following line of code. You will only need to do this once on your computer (unless you require updates etc.).</p>
