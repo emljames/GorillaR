@@ -2,9 +2,9 @@
 title: "Version Information"
 ---
 
-**This tutorial was last updated in April 2020.**
+*This tutorial was last updated in April 2020.*
 
-This tutorial was created using the following package versions:
+The material was created using the following package versions:
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 library(tidyverse)
