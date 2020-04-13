@@ -2,7 +2,7 @@
 title: "Version Information"
 ---
 
-**Package information:**
+**This tutorial was last updated in April 2020.**
 
 This tutorial was created using the following package versions:
 

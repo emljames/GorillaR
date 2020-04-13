@@ -9,7 +9,7 @@ options(Encoding="UTF-8")
 
 # Introduction
 
-In Part 1 of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:
+In [Part 1](https://emljames.github.io/GorillaR/GorillaR_Part1.html) of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:
 
 * `read.csv()` to read in the data.
 * `filter()` to keep one row per trial, containing the participant response.
@@ -25,7 +25,7 @@ Now we've got to grips with the basics, here are some extra sections on making t
 
 If you want to follow along with this tutorial using the data files, you can pick up right where we left off after Part 1.
 
-If you no longer have the dataframes stored in your R session, you may wish to recap Part 1 as a reminder. Alternatively, we can re-load the processed data files that we saved at the end. 
+If you no longer have the dataframes stored in your R session, you may wish to recap [Part 1](https://emljames.github.io/GorillaR/GorillaR_Part1.html) as a reminder. Alternatively, we can re-load the processed data files that we saved at the end. 
 
 ```{r}
 trial_data <- read.csv("./output/trial_data.csv")
@@ -55,7 +55,7 @@ items <- read.csv("./story_materials/item-conds.csv")
 items
 ```
 
-I can then use the `item` column to merge it with the items in my trial level data.
+I can then use the `item` column to merge it with the items in my trial-level data.
 
 ```{r}
 trial_data_conds <- trial_data %>% 
@@ -329,7 +329,7 @@ Beyond this, we also learned a few other helpful tools for working with the data
 
 We've also used `head()`, `count()`, and `nrow()` throughout to keep checking that our data processing looked sensible.
 
-Just as we saw at the end of the Part 1, using the pipe operator means that you can easily incorporate these steps into your data processing---feeding from one step to the next. All in one tidy and efficient block of code!
+Just as we saw at the [end of Part 1](https://emljames.github.io/GorillaR/GorillaR_Part1.html#putting_it_all_together_(in_one_easy_step)), using the pipe operator means that you can easily incorporate these steps into your data processing---feeding from one step to the next. All in one tidy and efficient block of code!
 
 
 ### How to find help

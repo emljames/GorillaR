@@ -9,7 +9,7 @@ navbar:
     href: GorillaR_Part1.html
   - text: "Part 2"
     href: GorillaR_Part2.html
-  - text: "version Info"
+  - text: "Version Info"
     href: version.html
 output:
   html_document:
