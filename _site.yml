@@ -1,0 +1,16 @@
+name: "GorillaR"
+output_dir: "docs"
+navbar:
+  title: "From Gorilla to Tidy Data"
+  left:
+  - text: "Tutorial Home"
+    href: index.html
+  - text: "Part 1"
+    href: GorillaR_Part1.html
+output:
+  html_document:
+    theme: cosmo
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
