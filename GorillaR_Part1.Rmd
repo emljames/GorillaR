@@ -6,7 +6,8 @@ title: 'Part 1: From Gorilla to Tidy Data in 5 Easy Steps'
 options(Encoding="UTF-8")
 ```
 
-**********************
+
+***********************
 
 # Setting up
 
