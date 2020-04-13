@@ -1,5 +1,10 @@
 ---
 title: "Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+  encoding=encoding,
+  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Emma James"
 date: "April 2020"
 output:
@@ -79,18 +84,18 @@ In this example, we will use an output file from a word-learning experiment prog
 
 Each csv file from Gorilla is identified by the experiment code and version (the same for all of your output files, unless you had to set up a second version of the experiment), and the task ID at the end (a string of 4 alpha-numeric characters). You can match these up to your experiment by looking at your task builder. 
 
-![ ](Figures/figures/Slide1.PNG)
+![ ](figures/task-builder.PNG)
 
 For this task, the corresponding data file is "data_exp_4424-v9_task-y5i7.csv". We can read it into R using the `read.csv()` function. The assignment operator `<-` means that we store the result as a dataframe in our environment. I have called the dataframe `raw_data`, but you could call it whatever you like. 
 
 ```{r}
-raw_data <- read.csv("./Story materials/data_exp_4424-v9_task-y5i7.csv")
+raw_data <- read.csv("./story_materials/data_exp_4424-v9_task-y5i7.csv")
 ```
 
 
 It's a good idea to preview the dataframe to check that things haven't gone awry. The easiest way to do this is to use the viewer in RStudio (unless your dataset is huge). You can open the viewer by double-clicking the little grid icon next to dataframe in the Environment pane.
 
-![ ](Figures/figures/tableview.png)
+![ ](figures/tableview.png)
 
 
 If you'd like to try processing this dataset yourself, you can find the files in the zip folder. 
@@ -101,7 +106,7 @@ If you'd like to try processing this dataset yourself, you can find the files in
 
 If you open your csv file (using e.g., Excel), you will see that Gorilla provides you with a row for each screen that a participant sees. Depending on your experiment, this could mean that there are multiple output rows for a single experimental trial. Scroll the columns and try to identify which rows contain the data you need---usually collected from a response zone. If you've been thorough in your Gorilla set-up and named all of your screens thoroughly this might be easy. If you're like me and haven't bothered, you will have lots of rows that are unhelpfully named as "Screen 1", "Screen 2" etc. So look for the rows that contain your response data in some appropriate-looking columns! 
 
-![ ](Figures/figures/Slide2.PNG)
+![ ](figures/data-rows.PNG)
 
 The task we're using here is a 4-alternative-forced-choice task: participants were presented with a picture and were asked to select which of 4 pseudowords was its name in a story they had listened to. The participant could click each item to hear the associated audio files, and Gorilla keeps a record of whether they have done this. As a result, there are varying numbers of rows for each trial. However, each trial ended with the participant pressing a response button to make their selection, and so we can use the `response_button_text` in the Zone Type column to identify each response.
 
@@ -246,7 +251,7 @@ Now we have our trial level and participant level data, we can save these out as
 
 To write out the data, we use the `write.csv()` function. We need to tell it the dataframe we want to save and the name we want to give it (*including* the file extension, *.csv*). Here, we have also included `row.names = FALSE` to stop R from automatically adding a column with row numbers. 
 
-```{r}
+```{r eval = FALSE}
 write.csv(trial_data, "trial_data.csv", row.names = FALSE)
 write.csv(participant_data, "participant_averages.csv", row.names = FALSE)
 ```
@@ -270,7 +275,7 @@ We also used `head()` and `count()` to keep checking that our data processing lo
 Throughout this example, we have broken down the processing steps to learn what each function does. However, the joy of the *tidyverse* and the pipe operator is that we can actually do this all in one fell swoop. Whilst it makes sense to build up your data processing bit by bit and carry out checks along the way, the final product can be much shorter. 
 
 ```{r}
-processed_data <- read.csv("./Story materials/data_exp_4424-v9_task-y5i7.csv") %>% 
+processed_data <- read.csv("./story_materials/data_exp_4424-v9_task-y5i7.csv") %>% 
   filter(Zone.Type == "response_button_text") %>%
   select(Participant.Private.ID, ANSWER, Correct, Reaction.Time) %>% 
   set_names(c("ID", "item", "acc", "RT")) %>% 
