@@ -6,6 +6,7 @@ title: "Part 2: From Gorilla to Tidy Data, and then some"
 options(Encoding="UTF-8")
 ```
 
+***********************
 
 # Introduction
 
