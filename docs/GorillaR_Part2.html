@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Emma James" />
+
+
+<title>Part 2: From Gorilla to Tidy Data, and then some</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">From Gorilla to Tidy Data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Tutorial Home</a>
+</li>
+<li>
+  <a href="GorillaR_Part1.html">Part 1</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Part 2: From Gorilla to Tidy Data, and then some</h1>
+<h4 class="author">Emma James</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>In Part 1 of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:</p>
+<ul>
+<li><code>read.csv()</code> to read in the data.</li>
+<li><code>filter()</code> to keep one row per trial, containing the participant response.</li>
+<li><code>select()</code> to keep the relevant columns.</li>
+<li><code>set_names()</code> or <code>rename()</code> to name the columns in a more intuitive way.</li>
+<li><code>group_by()</code> and <code>summarise()</code> to calculate summary statistics for each participant.</li>
+</ul>
+<p>We also used <code>head()</code> and <code>count()</code> to keep checking that our data processing looked sensible.</p>
+<p>Now we’ve got to grips with the basics, here are some extra sections on making the most of the <em>tidyverse</em> functions, and scaling up to more complex datasets.</p>
+<div id="preparing-for-this-tutorial" class="section level3">
+<h3>Preparing for this tutorial</h3>
+<p>If you want to follow along with this tutorial using the data files, you can pick up right where we left off after Part 1.</p>
+<p>If you no longer have the dataframes stored in your R session, you may wish to recap Part 1 as a reminder. Alternatively, we can re-load the processed data files that we saved at the end.</p>
+<pre class="r"><code>trial_data &lt;- read.csv(&quot;./output/trial_data.csv&quot;)
+participant_data &lt;- read.csv(&quot;./output/participant_averages.csv&quot;)</code></pre>
+<p>Make sure you have the <code>tidyverse</code> library loaded!</p>
+</div>
+</div>
+<div id="leftjoin" class="section level1">
+<h1>Dealing with more than one experimental condition</h1>
+<p>The example used in Part 1 was a very simple one, designed to get you started with data processing using the <em>tidyverse</em>. However, you more than likely have more than one experimental condition in your data.</p>
+<div id="merging-condition-information" class="section level3">
+<h3>Merging condition information</h3>
+<p>You might have been sensible enough to label these somehow in your Gorilla spreadsheet, in which case you can make sure you include the relevant columns in your variable selection, and use it alongside <code>ID</code> in your <code>group_by()</code> function when creating participant means (as we will <a href="#summarycond">below</a>). But I did not.</p>
+<p>Instead, I have a separate csv file that documents which item came from which condition (as this was the same across participants). If we load this in, you can see that it lists each <code>item</code> and the <code>neighb</code> condition that it belongs to. There were three conditions in this experiment: whether the pseudoword has no, one, or many neighbours in the English language.</p>
+<pre class="r"><code>items &lt;- read.csv(&quot;./story_materials/item-conds.csv&quot;)
+items</code></pre>
+<pre><code>##      item neighb
+## 1  parung   none
+## 2  tesdar   none
+## 3   femod   none
+## 4  peflin   none
+## 5  vorgal   none
+## 6   solly   many
+## 7  dester   many
+## 8   nusty   many
+## 9   mowel   many
+## 10 ballow   many
+## 11  regby    one
+## 12  wabon    one
+## 13 tabric    one
+## 14 pungus    one
+## 15  rafar    one</code></pre>
+<p>I can then use the <code>item</code> column to merge it with the items in my trial level data.</p>
+<pre class="r"><code>trial_data_conds &lt;- trial_data %&gt;% 
+  left_join(items, by = &quot;item&quot;)</code></pre>
+<p>Here, we’ve said to take the <code>trial_data</code> dataframe, and join it to the <code>items</code> dataframe using the <code>item</code> column common to both dataframes (i.e., it will match each row based on the content of the <code>item</code> column). Using <code>left_join</code> means that we want to keep all rows in the first dataframe we give to the argument (<code>trial_data</code>, fed into the function via the pipe). The second dataframe (<code>items</code>) will therefore be repeated across all matches.</p>
+<pre class="r"><code>head(trial_data_conds)</code></pre>
+<pre><code>##       ID   item acc      RT neighb
+## 1 508739 vorgal   0 14449.2   none
+## 2 508739  mowel   1  8980.6   many
+## 3 508739 peflin   1  3813.7   none
+## 4 508739 dester   0  6945.2   many
+## 5 508739  wabon   1 12621.1    one
+## 6 508739 ballow   0  6757.5   many</code></pre>
+</div>
+<div id="summarycond" class="section level3">
+<h3>One participant score per condition</h3>
+<p>Now, when creating our participant means, we specify that we want a summary statistic for each <code>neighb</code> condition. To do this, we just add an extra argument to the <code>group_by()</code> function. We say we want the <code>summarise()</code> function to work on each combination of participant ID and neighbour condition.</p>
+<pre class="r"><code>participant_data_conds &lt;- trial_data_conds %&gt;% 
+  group_by(ID, neighb) %&gt;% 
+  summarise(meanAcc = mean(acc), meanRT = mean(RT, na.rm = TRUE))
+
+head(participant_data_conds)</code></pre>
+<pre><code>## # A tibble: 6 x 4
+## # Groups:   ID [2]
+##       ID neighb meanAcc meanRT
+##    &lt;int&gt; &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 508739 many       0.2  7304.
+## 2 508739 none       0.6  5428.
+## 3 508739 one        0.6  8486.
+## 4 508745 many       0.4  4165.
+## 5 508745 none       0.8  4913.
+## 6 508745 one        0.6  4084.</code></pre>
+<p>This gives a row for each participant for each condition. If we wanted, we could rearrange this dataset to be one row per participant using the <code>pivot_wider()</code> function. This allows us to specify the unique identifier we want for each row (the participant <code>ID</code>), how we want to organise the columns (<code>neighb</code>), and the values that we want in those columns (both <code>meanAcc</code> and <code>meanRT</code>). We will cover the <code>pivot_wider()</code>function in more detail <a href="#pivot">below</a>.</p>
+<pre class="r"><code>participant_data_conds_w &lt;- participant_data_conds %&gt;% 
+  pivot_wider(id_cols = ID, names_from = neighb, values_from = c(meanRT, meanAcc))
+
+head(participant_data_conds_w)</code></pre>
+<pre><code>## # A tibble: 6 x 7
+## # Groups:   ID [6]
+##       ID meanRT_many meanRT_none meanRT_one meanAcc_many meanAcc_none meanAcc_one
+##    &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+## 1 508739       7304.       5428.      8486.          0.2          0.6         0.6
+## 2 508745       4165.       4913.      4084.          0.4          0.8         0.6
+## 3 508749       4372.       5894.      4873.          0.6          1           1  
+## 4 508754       4836.       8059.      5231.          0.6          0.6         0.4
+## 5 508757       5752.       6730.      3554.          1            1           1  
+## 6 508942       3968.       3711.      5163.          0.6          0.6         0.6</code></pre>
+<p>Now we have an RT column for participant averages in each neighbour condition (many, none, one), and the same again for accuracy.</p>
+</div>
+</div>
+<div id="creating-new-variables-using-mutate" class="section level1">
+<h1>Creating new variables using <code>mutate()</code></h1>
+<div id="computing-across-columns" class="section level3">
+<h3>Computing across columns</h3>
+<p>The <code>mutate()</code> function allows us to create a new column based on the content of other columns (much like writing a formula in an Excel spreadsheet, or computing a new variable in SPSS). It always follows the structure <code>new_name = formula</code>, with each set separated with a comma if you are computing more than one column at once.</p>
+<p>As an example, let’s take our condition means data from above, with one column per condition. We could now compute the differences in performance between the many and no neighbour conditions, for each participant.</p>
+<pre class="r"><code>participant_data_conds_w &lt;- participant_data_conds_w %&gt;% 
+  mutate(diffAcc = meanAcc_many - meanAcc_none,
+         diffRT = meanRT_many - meanRT_none)</code></pre>
+<p>Here we have said:</p>
+<ul>
+<li>Take the <code>participant_data_conds_w</code> data frame, <em>AND THEN…</em><br />
+</li>
+<li>Create a column called <code>diffAcc</code> that is equal to the value of each participant’s accuracy score for the “many” condition, minus their score for the “none” condition.<br />
+</li>
+<li>Create a column called <code>diffRT</code> that is equal to the value of each participant’s RT for the “many” condition, minus their RT for the “none” condition.</li>
+</ul>
+<p>As before, we reassigned the dataframe back to itself (<code>participant_data_conds_w &lt;-</code>) to save the version with the new column added.</p>
+<p>Let’s take a look and check:</p>
+<pre class="r"><code>participant_data_conds_w %&gt;% 
+  select(-meanAcc_one, -meanRT_one) %&gt;%    # remove one-neighbour condition columns from preview so prints on one line
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 7
+## # Groups:   ID [6]
+##       ID meanRT_many meanRT_none meanAcc_many meanAcc_none diffAcc diffRT
+##    &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 508739       7304.       5428.          0.2          0.6   -0.40  1875.
+## 2 508745       4165.       4913.          0.4          0.8   -0.4   -748.
+## 3 508749       4372.       5894.          0.6          1     -0.4  -1522.
+## 4 508754       4836.       8059.          0.6          0.6    0    -3223.
+## 5 508757       5752.       6730.          1            1      0     -978.
+## 6 508942       3968.       3711.          0.6          0.6    0      257.</code></pre>
+<p>You can see that we now have two extra columns at the end, and that <code>mutate()</code> has performed the operations separately for each row. Again, it’s always a good idea to check a few of these manually to make sure they are as you would expect.</p>
+</div>
+<div id="monitoring-participant-eligibility-based-on-performance" class="section level3">
+<h3>Monitoring participant eligibility based on performance</h3>
+<p>One of the advantages of scripting your data processing before/early in data collection is that you can keep on top of whether you need to replace participants who perform too poorly (or too well) to be included in your analysis. The <code>mutate()</code> function can help us here too.</p>
+<p>For example, in this dataset, chance level performance was 25% (there were four answer options), and we might want to exclude participants who performed below this level as we suspect they were not paying attention during the experiment. Here, we can use <code>mutate()</code> to flag participants who don’t meet the criteria.</p>
+<pre class="r"><code>participant_data &lt;- participant_data %&gt;% 
+  mutate(eligibility = ifelse(meanAcc &gt; .25, 1, 0))</code></pre>
+<p>I have called the new column <code>eligibility</code>, and used an <code>ifelse()</code> function to determine what goes in the column (very much like the “IF” formula you might have come across in Excel). It says, <em>if</em> participant’s mean accuracy (<code>meanAcc</code>) is greater than .25, assign a 1 to the column. <em>Else</em>, assign a 0.</p>
+<p>We can then use our new column to quickly see how many eligible participants we have collected so far. We group the data by eligibility, and count the number of participants in each.</p>
+<pre class="r"><code>participant_data %&gt;% 
+  group_by(eligibility) %&gt;% 
+  count()</code></pre>
+<pre><code>## # A tibble: 2 x 2
+## # Groups:   eligibility [2]
+##   eligibility     n
+##         &lt;dbl&gt; &lt;int&gt;
+## 1           0     1
+## 2           1    51</code></pre>
+<p>We can see that one participant will not be eligible for our analyses, and can release another participant slot online to replace them.</p>
+</div>
+<div id="dealing-with-ineligible-data-points" class="section level3">
+<h3>Dealing with ineligible data points</h3>
+<p>Whilst we’re at it, combining <code>mutate()</code> and <code>ifelse()</code> is also very handy for excluding data points we don’t want. For example, in cognitive tasks, we often only care about reaction times for the trials that the participant answered correctly.</p>
+<p>So if we go back to our trial-level data, we can create another version of the <code>RT</code> data that <em>only</em> includes the value if the accuracy column showed the trial as correct (1).</p>
+<pre class="r"><code>trial_data &lt;- trial_data %&gt;% 
+  mutate(accRT = ifelse(acc == 1, RT, NA))</code></pre>
+<p>Here we have said:</p>
+<ul>
+<li>Reassign the <code>trial_data</code> dataframe, by taking <code>trial_data</code>, <em>AND THEN…</em></li>
+<li>Creating a column called <code>accRT</code>, which for each row consists of the following:
+<ul>
+<li><em>if</em> <code>acc</code> is equal to 1, use the value in the <code>RT</code> column</li>
+<li><em>else</em> (if <code>acc</code> is NOT equal to 1), use NA to record it as missing data</li>
+</ul></li>
+</ul>
+<p>Let’s check if it worked:</p>
+<pre class="r"><code>head(trial_data)</code></pre>
+<pre><code>##       ID   item acc      RT   accRT
+## 1 508739 vorgal   0 14449.2      NA
+## 2 508739  mowel   1  8980.6  8980.6
+## 3 508739 peflin   1  3813.7  3813.7
+## 4 508739 dester   0  6945.2      NA
+## 5 508739  wabon   1 12621.1 12621.1
+## 6 508739 ballow   0  6757.5      NA</code></pre>
+<p>We can see that the <code>accRT</code> column only contains the reaction times for the trials that were answered correctly. Now, when computing our participant averages, we can use the <code>accRT</code> column so that it’s only incorporating RTs for correct answers. Remember to include <code>na.rm = TRUE</code> to ignore missing values!</p>
+<pre class="r"><code>participant_data &lt;- trial_data %&gt;% 
+  group_by(ID) %&gt;% 
+  summarise(meanAcc = mean(acc), 
+            meanRT = mean(accRT, na.rm = TRUE))</code></pre>
+</div>
+</div>
+<div id="combining-output-files-using-bind_rows-and-_join" class="section level1">
+<h1>Combining output files using <code>bind_rows()</code> and <code>_join()</code></h1>
+<div id="merge1" class="section level3">
+<h3>Merging output files from the same task</h3>
+<p>It might be that we have the same task presented across different experiment nodes in Gorilla. If we want to treat all files the same, we can read them in and append them to each other <em>before</em> we carry out the data processing steps. In this dataset, participants were randomised into different counterbalancing conditions at the start of the experiment: different groups of participants learned and were tested on different pseudoword-object pairings. However, the task set up was identical, so we want to piece the different output files back together.</p>
+<p>To do this, we can first create a list of the files that we want. Here, I’ve added a second version of the task from a different counterbalancing condition.</p>
+<pre class="r"><code>files &lt;- c(&quot;./story_materials/data_exp_4424-v9_task-y5i7.csv&quot;,
+           &quot;./story_materials/data_exp_4424-v9_task-lwe7.csv&quot;)</code></pre>
+<p>Or, if you want to read in all of the csv files in a particular folder, you can also create this list more efficiently using the <code>list.files()</code> function. It takes information about the file path (so I’ve pointed it to my folder of Story Materials), and a pattern to match to identify relevant files (I’ve specified I want the “.csv” files only).</p>
+<pre class="r"><code>allfiles &lt;- list.files(path = &quot;./story_materials/&quot;, pattern = &quot;.csv&quot;)</code></pre>
+<p>However, we’ll stick to our two files for now. We want to read in each file, and bind them together:</p>
+<pre class="r"><code>raw_data_comb &lt;- lapply(files, read.csv) %&gt;% 
+  bind_rows()</code></pre>
+<p>The function <code>lapply</code> is a base R function, which applies the same function across a list of objects. Here, we’ve asked it to apply the <code>read.csv</code> function to the list of <code>files</code> that we created. We then use the pipe operator <code>%&gt;%</code> to feed the output to the <code>bind_rows()</code> function, which sticks it all together. Et voila!</p>
+<p>We can use <code>nrow()</code> to check that our new combined version contains more observations than our first one did. You can also see this by checking the number of observations listed for the dataframe in the environment pane.</p>
+<pre class="r"><code># Original raw data file
+raw_data &lt;- read.csv(&quot;./story_materials/data_exp_4424-v9_task-y5i7.csv&quot;)
+nrow(raw_data)</code></pre>
+<pre><code>## [1] 1299</code></pre>
+<pre class="r"><code># New combined data file
+nrow(raw_data_comb)</code></pre>
+<pre><code>## [1] 2537</code></pre>
+<p><em>Note: if you are running this yourself, R might spit some red warnings at you to tell you that it’s coerced one of your variables into a character type. This looks scary, but there’s no need to panic! This is simply letting you know how it’s interpreted the information, and can be a possible thing to investigate if your output isn’t as you expect.</em></p>
+</div>
+<div id="merge2" class="section level3">
+<h3>Merging participant data from different tasks</h3>
+<p>Often, we will have collected data about our participants across different tasks, and will want to merge that information together. This could be anything from the basic demographic information that we collected at the start of the experiment to their performance on a different task.</p>
+<p>For an example here, we will use our original set of participants above (<code>participant_data</code>), and match up their performance the next day (<code>day2_data</code>). I’ve processed this file in the same way that we did in Part 1 to produce day2 scores.</p>
+<pre class="r"><code>day2_data &lt;- read.csv(&quot;./story_materials/data_exp_4424-v9_task-z5kw.csv&quot;) %&gt;% 
+  filter(Zone.Type == &quot;response_button_text&quot;) %&gt;%
+  select(Participant.Private.ID, ANSWER, Correct, Reaction.Time) %&gt;% 
+  set_names(c(&quot;ID&quot;, &quot;item&quot;, &quot;acc&quot;, &quot;RT&quot;)) %&gt;% 
+  group_by(ID) %&gt;% 
+  summarise(day2Acc = mean(acc), day2RT = mean(RT, na.rm = TRUE))
+
+head(day2_data)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##       ID day2Acc day2RT
+##    &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 508739   0.6    3573.
+## 2 508745   0.667  3408.
+## 3 508749   0.667  4356.
+## 4 508754   0.667  4634.
+## 5 508757   0.733  4090.
+## 6 508942   0.667  4723.</code></pre>
+<p>The aim here is to merge this <code>day2_data</code> with the <code>participant_data</code> dataset we made earlier, such that we have all information for one participant on a single row.</p>
+<pre class="r"><code>full_data &lt;- participant_data %&gt;% 
+  full_join(day2_data, by = &quot;ID&quot;)</code></pre>
+<p>In the code above, we have created a new dataframe (<code>full_data</code>) by taking <code>participant_data</code> and completing a full join with the <code>day2_data</code>. By using a <code>full_join()</code> (rather than the <code>left_join()</code> we used <a href="#leftjoin">above</a>), all rows from each dataset will be kept, even if they don’t have a match in the other. This means that participants missing information on a particular task won’t just disappear from your dataset.</p>
+<p>We can check that our merge has been successful by previewing the dataset:</p>
+<pre class="r"><code>head(full_data)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##       ID meanAcc meanRT day2Acc day2RT
+##    &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 508739   0.467  6747.   0.6    3573.
+## 2 508745   0.6    4352.   0.667  3408.
+## 3 508749   0.867  5006.   0.667  4356.
+## 4 508754   0.533  5130.   0.667  4634.
+## 5 508757   1      5345.   0.733  4090.
+## 6 508942   0.6    4413.   0.667  4723.</code></pre>
+<p>It’s also a good idea to check that you haven’t lost (or gained!) participants by accident. You can do this by looking at the number of observations documented for the dataframes in the Environment Pane (e.g., “52 obs.”), or by printing out the number of rows for each version as we did above.</p>
+<pre class="r"><code>nrow(participant_data)</code></pre>
+<pre><code>## [1] 52</code></pre>
+<pre class="r"><code>nrow(day2_data)</code></pre>
+<pre><code>## [1] 52</code></pre>
+<pre class="r"><code>nrow(full_data)</code></pre>
+<pre><code>## [1] 52</code></pre>
+<p>We can see that here they are the same, as all participants completed both the first and second activity, and the merge has been successful in merging these together. If the numbers mismatch in your own dataset, you will want to think about why—did some participants have missing data across the tasks? Have any rows not successfully merged (e.g., due to an error in the participant ID number)?</p>
+</div>
+</div>
+<div id="pivot" class="section level1">
+<h1>Reshaping your dataset using <code>pivot_()</code></h1>
+<p>Finally, it’s useful to know how to rearrange your data so that it can be used for different kinds of analysis. Many statistical functions in R like “long format” data—one trial per participant per row, as in our <code>trial_data</code> above. But what if you want to inspect patterns of performance across items? “Wide format” data—all data for one participant on a single row—may be helpful for saving out your data in a concise way, or for certain types of analysis (e.g., PCA).</p>
+<p>The <em>tidyverse</em> <code>pivot_wider()</code> and <code>pivot_longer()</code> functions are very helpful here. You might also see reference to <code>spread()</code> and <code>gather()</code> if you look for help on the internet—these work very similarly, but will eventually be retired and replaced by the pivot functions.</p>
+<div id="from-long-to-wide" class="section level3">
+<h3>From long to wide</h3>
+<p>For example, in the code below, we take our <code>trial_data</code> (using the accuracy information only, the <code>-</code> in the <code>select()</code> function allows us to drop the RT information). We then tell <code>pivot_wider()</code> that it should take column names from the current <code>item</code> column, and use the values in the <code>acc</code> column to fill them.</p>
+<pre class="r"><code>participant_items &lt;- trial_data %&gt;% 
+  select(-RT, -accRT) %&gt;% 
+  pivot_wider(names_from = item, values_from = acc)</code></pre>
+<p>We can check that it worked by previewing the dataset, and by checking that we now have one row per participant.</p>
+<pre class="r"><code>head(participant_items)</code></pre>
+<pre><code>## # A tibble: 6 x 16
+##       ID vorgal mowel peflin dester wabon ballow pungus tesdar rafar femod parung tabric regby solly nusty
+##    &lt;int&gt;  &lt;int&gt; &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt;  &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 508739      0     1      1      0     1      0      0      1     0     0      1      1     1     0     0
+## 2 508745      1     0      1      0     1      0      0      1     0     1      0      1     1     1     1
+## 3 508749      1     1      1      0     1      0      1      1     1     1      1      1     1     1     1
+## 4 508754      0     1      1      1     1      0      0      1     0     0      1      0     1     0     1
+## 5 508757      1     1      1      1     1      1      1      1     1     1      1      1     1     1     1
+## 6 508942      1     1      1      0     1      0      0      0     0     0      1      1     1     1     1</code></pre>
+<pre class="r"><code>nrow(participant_items)</code></pre>
+<pre><code>## [1] 52</code></pre>
+</div>
+<div id="from-wide-to-long" class="section level3">
+<h3>From wide to long</h3>
+<p>And whilst we’re at it, what if we want to go from the “wide” dataset back to “long” again? We tell <code>pivot_longer()</code> to use all columns apart from the ID column (<code>cols = -ID</code>); the column names should go back to an <code>item</code> column, and the values should go in an <code>acc</code> column.</p>
+<pre class="r"><code>items_back &lt;- participant_items %&gt;% 
+  pivot_longer(cols = -ID, names_to = &quot;item&quot;, values_to = &quot;acc&quot;)
+
+head(items_back)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##       ID item     acc
+##    &lt;int&gt; &lt;chr&gt;  &lt;int&gt;
+## 1 508739 vorgal     0
+## 2 508739 mowel      1
+## 3 508739 peflin     1
+## 4 508739 dester     0
+## 5 508739 wabon      1
+## 6 508739 ballow     0</code></pre>
+<p>We can see now that the number of rows in the returned version match our original trial level data:</p>
+<pre class="r"><code>nrow(items_back)</code></pre>
+<pre><code>## [1] 780</code></pre>
+<pre class="r"><code>nrow(trial_data)</code></pre>
+<pre><code>## [1] 780</code></pre>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>I hope you have seen that the <em>tidyverse</em> tools can be helpful in efficiently processing new datasets. In the initial example, we used the following functions to process our data:</p>
+<ul>
+<li><code>read.csv()</code> to read in the data.</li>
+<li><code>filter()</code> to keep one row per trial, containing the participant response.</li>
+<li><code>select()</code> to keep the relevant columns.</li>
+<li><code>set_names()</code> or <code>rename()</code> to name the columns in a more intuitive way.</li>
+<li><code>group_by()</code> and <code>summarise()</code> to calculate summary statistics for each participant. These are also useful when producing descriptive statistics across the whole sample.</li>
+</ul>
+<p>Beyond this, we also learned a few other helpful tools for working with the data and applying your knowledge to more complex datasets:</p>
+<ul>
+<li><code>mutate()</code> to create new variables based on the content of other columns. We also combined this with <code>ifelse()</code> to create variables based on certain conditions.<br />
+</li>
+<li><code>left_join()</code> and <code>full_join()</code> to join dataframes together horizontally (on the basis of matching row IDs).<br />
+</li>
+<li><code>bind_rows()</code> to “stack” dataframes on top of each other, adding extra rows (on the basis of matching columns).<br />
+</li>
+<li><code>pivot_wider()</code> and <code>pivot_longer()</code> to rearrange data between long and wide formats.</li>
+</ul>
+<p>We’ve also used <code>head()</code>, <code>count()</code>, and <code>nrow()</code> throughout to keep checking that our data processing looked sensible.</p>
+<p>Just as we saw at the end of the Part 1, using the pipe operator means that you can easily incorporate these steps into your data processing—feeding from one step to the next. All in one tidy and efficient block of code!</p>
+<div id="how-to-find-help" class="section level3">
+<h3>How to find help</h3>
+<p>If you get stuck with the material here, I encourage you to email me <a href="emma.james@york.ac.uk">emma.james@york.ac.uk</a>—I would appreciate the feedback in helping to make this material clearer and more accessible.</p>
+<p>More broadly speaking, there are some key sources of help when you get stuck with your R tasks.</p>
+<ol style="list-style-type: decimal">
+<li>If you can’t remember what you need to put in a particular function (or want to know what other options might be available), you can type <code>help(function)</code> in the console to bring up its documentation (replacing <code>function</code> with the function name, e.g., <code>help(left_join)</code>.</li>
+<li>There are some excellent cheatsheets available for quick reference. For example, the dplyr cheatsheet can be found <a href="https://dplyr.tidyverse.org/">here</a>.</li>
+<li>Google is your friend. It’s highly likely that multiple people will have asked very similar questions to you on platforms such as <a href="https://stackexchange.com/">StackExchange</a> - frequent googling is very normal, even for professional programmers!</li>
+</ol>
+<p>On that last note, I wish to provide a final reassurance to <strong>embrace the errors</strong> and the warnings. Sometimes they are warnings that you can choose to ignore (as we did above when binding the dataframes), but they are useful to investigate if things aren’t turning out as you expect. These are readily copy and pasted into Google, where you can find more information to understand it better. It <em>doesn’t</em> mean that you’ve broken R!</p>
+<hr />
+<p><strong>Acknowledgements:</strong></p>
+<p>Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial.</p>
+<p><strong>Package information:</strong></p>
+<p>This tutorial was created using the following package versions:</p>
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 17134)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252
+## [4] LC_NUMERIC=C                            LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] forcats_0.5.0   stringr_1.4.0   dplyr_0.8.5     purrr_0.3.3     readr_1.3.1     tidyr_1.0.2     tibble_2.1.3    ggplot2_3.3.0  
+## [9] tidyverse_1.3.0
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.0.0 xfun_0.12        haven_2.2.0      lattice_0.20-38  colorspace_1.4-1 vctrs_0.2.4      generics_0.0.2  
+##  [8] htmltools_0.4.0  yaml_2.2.1       utf8_1.1.4       rlang_0.4.5      pillar_1.4.3     withr_2.1.2      glue_1.3.2      
+## [15] DBI_1.1.0        dbplyr_1.4.2     modelr_0.1.6     readxl_1.3.1     lifecycle_0.2.0  munsell_0.5.0    gtable_0.3.0    
+## [22] cellranger_1.1.0 rvest_0.3.5      evaluate_0.14    knitr_1.28       fansi_0.4.1      broom_0.5.5      Rcpp_1.0.3      
+## [29] backports_1.1.5  scales_1.1.0     jsonlite_1.6.1   fs_1.3.2         hms_0.5.3        packrat_0.5.0    digest_0.6.25   
+## [36] stringi_1.4.6    grid_3.6.0       cli_2.0.2        tools_3.6.0      magrittr_1.5     crayon_1.3.4     pkgconfig_2.0.3 
+## [43] rsconnect_0.8.16 xml2_1.2.5       reprex_0.3.0     lubridate_1.7.4  assertthat_0.2.1 rmarkdown_2.1    httr_1.4.1      
+## [50] rstudioapi_0.11  R6_2.4.1         nlme_3.1-139     compiler_3.6.0</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

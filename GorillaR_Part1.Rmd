@@ -1,5 +1,5 @@
 ---
-title: "Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps"
+title: "Part 1: From Gorilla to Tidy Data in 5 Easy Steps"
 author: "Emma James"
 ---
 
@@ -243,6 +243,8 @@ To write out the data, we use the `write.csv()` function. We need to tell it the
 write.csv(trial_data, "trial_data.csv", row.names = FALSE)
 write.csv(participant_data, "participant_averages.csv", row.names = FALSE)
 ```
+
+I've also include `"./output/"` at the start of my file name, to save the files to an "output" folder.  
 
 # Summary
 

@@ -12,7 +12,7 @@
 <meta name="author" content="Emma James" />
 
 
-<title>Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps</title>
+<title>Part 1: From Gorilla to Tidy Data in 5 Easy Steps</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -366,7 +366,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Tutorial Part 1: From Gorilla to Tidy Data in 5 Easy Steps</h1>
+<h1 class="title toc-ignore">Part 1: From Gorilla to Tidy Data in 5 Easy Steps</h1>
 <h4 class="author">Emma James</h4>
 
 </div>
@@ -595,6 +595,7 @@ div.tocify {
 <p>To write out the data, we use the <code>write.csv()</code> function. We need to tell it the dataframe we want to save and the name we want to give it (<em>including</em> the file extension, <em>.csv</em>). Here, we have also included <code>row.names = FALSE</code> to stop R from automatically adding a column with row numbers.</p>
 <pre class="r"><code>write.csv(trial_data, &quot;trial_data.csv&quot;, row.names = FALSE)
 write.csv(participant_data, &quot;participant_averages.csv&quot;, row.names = FALSE)</code></pre>
+<p>I’ve also include <code>"./output/"</code> at the start of my file name, to save the files to an “output” folder.</p>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>

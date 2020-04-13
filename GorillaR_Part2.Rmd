@@ -1,0 +1,353 @@
+---
+title: "Part 2: From Gorilla to Tidy Data, and then some"
+author: "Emma James"
+---
+
+```{r echo = FALSE}
+options(Encoding="UTF-8")
+```
+
+
+# Introduction
+
+In Part 1 of the tutorial, we learned how to read in output from Gorilla and extract the data we need. To recap, we used:
+
+* `read.csv()` to read in the data.
+* `filter()` to keep one row per trial, containing the participant response.
+* `select()` to keep the relevant columns.
+* `set_names()` or `rename()` to name the columns in a more intuitive way. 
+* `group_by()` and `summarise()` to calculate summary statistics for each participant. 
+
+We also used `head()` and `count()` to keep checking that our data processing looked sensible.
+
+Now we've got to grips with the basics, here are some extra sections on making the most of the *tidyverse* functions, and scaling up to more complex datasets.
+
+### Preparing for this tutorial
+
+If you want to follow along with this tutorial using the data files, you can pick up right where we left off after Part 1.
+
+If you no longer have the dataframes stored in your R session, you may wish to recap Part 1 as a reminder. Alternatively, we can re-load the processed data files that we saved at the end. 
+
+```{r}
+trial_data <- read.csv("./output/trial_data.csv")
+participant_data <- read.csv("./output/participant_averages.csv")
+```
+
+Make sure you have the `tidyverse` library loaded!
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+# Dealing with more than one experimental condition {#leftjoin}
+
+The example used in Part 1 was a very simple one, designed to get you started with data processing using the *tidyverse*. However, you more than likely have more than one experimental condition in your data. 
+
+### Merging condition information
+
+You might have been sensible enough to label these somehow in your Gorilla spreadsheet, in which case you can make sure you include the relevant columns in your variable selection, and use it alongside `ID` in your `group_by()` function when creating participant means (as we will [below](#summarycond)). But I did not.
+
+Instead, I have a separate csv file that documents which item came from which condition (as this was the same across participants). If we load this in, you can see that it lists each `item` and the `neighb` condition that it belongs to. There were three conditions in this experiment: whether the pseudoword has no, one, or many neighbours in the English language.
+
+```{r}
+items <- read.csv("./story_materials/item-conds.csv")
+items
+```
+
+I can then use the `item` column to merge it with the items in my trial level data.
+
+```{r}
+trial_data_conds <- trial_data %>% 
+  left_join(items, by = "item")
+```
+
+Here, we've said to take the `trial_data` dataframe, and join it to the `items` dataframe using the `item` column common to both dataframes (i.e., it will match each row based on the content of the `item` column). Using `left_join` means that we want to keep all rows in the first dataframe we give to the argument (`trial_data`, fed into the function via the pipe). The second dataframe (`items`) will therefore be repeated across all matches.
+
+```{r}
+head(trial_data_conds)
+```
+
+### One participant score per condition {#summarycond}
+
+Now, when creating our participant means, we specify that we want a summary statistic for each `neighb` condition. To do this, we just add an extra argument to the `group_by()` function. We say we want the `summarise()` function to work on each combination of participant ID and neighbour condition.
+
+```{r}
+participant_data_conds <- trial_data_conds %>% 
+  group_by(ID, neighb) %>% 
+  summarise(meanAcc = mean(acc), meanRT = mean(RT, na.rm = TRUE))
+
+head(participant_data_conds)
+```
+
+This gives a row for each participant for each condition. If we wanted, we could rearrange this dataset to be one row per participant using the `pivot_wider()` function. This allows us to specify the unique identifier we want for each row (the participant `ID`), how we want to organise the columns (`neighb`), and the values that we want in those columns (both `meanAcc` and `meanRT`). We will cover the `pivot_wider()`function in more detail [below](#pivot).
+
+```{r}
+participant_data_conds_w <- participant_data_conds %>% 
+  pivot_wider(id_cols = ID, names_from = neighb, values_from = c(meanRT, meanAcc))
+
+head(participant_data_conds_w)
+```
+
+Now we have an RT column for participant averages in each neighbour condition (many, none, one), and the same again for accuracy.
+
+# Creating new variables using `mutate()`
+
+### Computing across columns
+
+The `mutate()` function allows us to create a new column based on the content of other columns (much like writing a formula in an Excel spreadsheet, or computing a new variable in SPSS). It always follows the structure `new_name = formula`, with each set separated with a comma if you are computing more than one column at once.
+
+As an example, let's take our condition means data from above, with one column per condition. We could now compute the differences in performance between the many and no neighbour conditions, for each participant. 
+
+```{r}
+participant_data_conds_w <- participant_data_conds_w %>% 
+  mutate(diffAcc = meanAcc_many - meanAcc_none,
+         diffRT = meanRT_many - meanRT_none)
+```
+
+Here we have said:  
+
+* Take the `participant_data_conds_w` data frame, *AND THEN...*  
+* Create a column called `diffAcc` that is equal to the value of each participant's accuracy score for the "many" condition, minus their score for the "none" condition.  
+* Create a column called `diffRT` that is equal to the value of each participant's RT for the "many" condition, minus their RT for the "none" condition.
+
+As before, we reassigned the dataframe back to itself (`participant_data_conds_w <-`) to save the version with the new column added.
+
+Let's take a look and check: 
+```{r}
+participant_data_conds_w %>% 
+  select(-meanAcc_one, -meanRT_one) %>%    # remove one-neighbour condition columns from preview so prints on one line
+  head()
+```
+
+You can see that we now have two extra columns at the end, and that `mutate()` has performed the operations separately for each row. Again, it's always a good idea to check a few of these manually to make sure they are as you would expect.
+
+
+### Monitoring participant eligibility based on performance
+
+One of the advantages of scripting your data processing before/early in data collection is that you can keep on top of whether you need to replace participants who perform too poorly (or too well) to be included in your analysis. The  `mutate()` function can help us here too.
+
+For example, in this dataset, chance level performance was 25% (there were four answer options), and we might want to exclude participants who performed below this level as we suspect they were not paying attention during the experiment. Here, we can use `mutate()` to flag participants who don't meet the criteria.
+
+```{r}
+participant_data <- participant_data %>% 
+  mutate(eligibility = ifelse(meanAcc > .25, 1, 0))
+```
+
+I have called the new column `eligibility`, and used an `ifelse()` function to determine what goes in the column (very much like the "IF" formula you might have come across in Excel). It says, *if* participant's mean accuracy (`meanAcc`) is greater than .25, assign a 1 to the column. *Else*, assign a 0.
+
+We can then use our new column to quickly see how many eligible participants we have collected so far. We group the data by eligibility, and count the number of participants in each.
+
+```{r}
+participant_data %>% 
+  group_by(eligibility) %>% 
+  count()
+```
+
+We can see that one participant will not be eligible for our analyses, and can release another participant slot online to replace them.
+
+### Dealing with ineligible data points
+
+Whilst we're at it, combining `mutate()` and `ifelse()` is also very handy for excluding data points we don't want. For example, in cognitive tasks, we often only care about reaction times for the trials that the participant answered correctly. 
+
+So if we go back to our trial-level data, we can create another version of the `RT` data that *only* includes the value if the accuracy column showed the trial as correct (1).
+
+```{r}
+trial_data <- trial_data %>% 
+  mutate(accRT = ifelse(acc == 1, RT, NA))
+```
+
+Here we have said:
+
+* Reassign the `trial_data` dataframe, by taking `trial_data`, *AND THEN...* 
+* Creating a column called `accRT`, which for each row consists of the following:  
+  + *if* `acc` is equal to 1, use the value in the `RT` column
+  + *else* (if `acc` is NOT equal to 1), use NA to record it as missing data
+
+Let's check if it worked:
+```{r}
+head(trial_data)
+```
+
+We can see that the `accRT` column only contains the reaction times for the trials that were answered correctly. Now, when computing our participant averages, we can use the `accRT` column so that it's only incorporating RTs for correct answers. Remember to include `na.rm = TRUE` to ignore missing values!
+
+```{r}
+participant_data <- trial_data %>% 
+  group_by(ID) %>% 
+  summarise(meanAcc = mean(acc), 
+            meanRT = mean(accRT, na.rm = TRUE))
+```
+
+
+# Combining output files using `bind_rows()` and `_join()`
+
+### Merging output files from the same task {#merge1}
+
+It might be that we have the same task presented across different experiment nodes in Gorilla. If we want to treat all files the same, we can read them in and append them to each other *before* we carry out the data processing steps. In this dataset, participants were randomised into different counterbalancing conditions at the start of the experiment: different groups of participants learned and were tested on different pseudoword-object pairings. However, the task set up was identical, so we want to piece the different output files back together. 
+
+To do this, we can first create a list of the files that we want. Here, I've added a second version of the task from a different counterbalancing condition. 
+
+```{r}
+files <- c("./story_materials/data_exp_4424-v9_task-y5i7.csv",
+           "./story_materials/data_exp_4424-v9_task-lwe7.csv")
+```
+
+Or, if you want to read in all of the csv files in a particular folder, you can also create this list more efficiently using the `list.files()` function. It takes information about the file path (so I've pointed it to my folder of Story Materials), and a pattern to match to identify relevant files (I've specified I want the ".csv" files only).
+
+```{r}
+allfiles <- list.files(path = "./story_materials/", pattern = ".csv")
+```
+
+However, we'll stick to our two files for now. We want to read in each file, and bind them together:
+
+```{r warning = FALSE, message = FALSE}
+raw_data_comb <- lapply(files, read.csv) %>% 
+  bind_rows()
+```
+
+The function `lapply` is a base R function, which applies the same function across a list of objects. Here, we've asked it to apply the `read.csv` function to the list of `files` that we created. We then use the pipe operator ` %>% ` to feed the output to the `bind_rows()` function, which sticks it all together. Et voila!
+
+We can use `nrow()` to check that our new combined version contains more observations than our first one did. You can also see this by checking the number of observations listed for the dataframe in the environment pane.
+
+```{r}
+# Original raw data file
+raw_data <- read.csv("./story_materials/data_exp_4424-v9_task-y5i7.csv")
+nrow(raw_data)
+
+# New combined data file
+nrow(raw_data_comb)
+```
+
+*Note: if you are running this yourself, R might spit some red warnings at you to tell you that it's coerced one of your variables into a character type. This looks scary, but there's no need to panic! This is simply letting you know how it's interpreted the information, and can be a possible thing to investigate if your output isn't as you expect.*
+
+
+### Merging participant data from different tasks {#merge2}
+
+Often, we will have collected data about our participants across different tasks, and will want to merge that information together. This could be anything from the basic demographic information that we collected at the start of the experiment to their performance on a different task. 
+
+For an example here, we will use our original set of participants above (`participant_data`), and match up their performance the next day (`day2_data`). I've processed this file in the same way that we did in Part 1 to produce day2 scores.
+
+```{r}
+day2_data <- read.csv("./story_materials/data_exp_4424-v9_task-z5kw.csv") %>% 
+  filter(Zone.Type == "response_button_text") %>%
+  select(Participant.Private.ID, ANSWER, Correct, Reaction.Time) %>% 
+  set_names(c("ID", "item", "acc", "RT")) %>% 
+  group_by(ID) %>% 
+  summarise(day2Acc = mean(acc), day2RT = mean(RT, na.rm = TRUE))
+
+head(day2_data)
+```
+
+The aim here is to merge this `day2_data` with the `participant_data` dataset we made earlier, such that we have all information for one participant on a single row. 
+
+```{r}
+full_data <- participant_data %>% 
+  full_join(day2_data, by = "ID")
+```
+
+In the code above, we have created a new dataframe (`full_data`) by taking `participant_data` and completing a full join with the `day2_data`. By using a `full_join()` (rather than the `left_join()` we used [above](#leftjoin)), all rows from each dataset will be kept, even if they don't have a match in the other. This means that participants missing information on a particular task won't just disappear from your dataset. 
+
+We can check that our merge has been successful by previewing the dataset:
+
+```{r}
+head(full_data)
+```
+
+It's also a good idea to check that you haven't lost (or gained!) participants by accident. You can do this by looking at the number of observations documented for the dataframes in the Environment Pane (e.g., "52 obs."), or by printing out the number of rows for each version as we did above.
+
+```{r}
+nrow(participant_data)
+nrow(day2_data)
+nrow(full_data)
+```
+
+We can see that here they are the same, as all participants completed both the first and second activity, and the merge has been successful in merging these together. If the numbers mismatch in your own dataset, you will want to think about why---did some participants have missing data across the tasks? Have any rows not successfully merged (e.g., due to an error in the participant ID number)?
+
+# Reshaping your dataset using `pivot_()` {#pivot}
+
+Finally, it's useful to know how to rearrange your data so that it can be used for different kinds of analysis. Many statistical functions in R like "long format" data---one trial per participant per row, as in our `trial_data` above. But what if you want to inspect patterns of performance across items? "Wide format" data---all data for one participant on a single row---may be helpful for saving out your data in a concise way, or for certain types of analysis (e.g., PCA).
+
+The *tidyverse* `pivot_wider()` and `pivot_longer()` functions are very helpful here. You might also see reference to `spread()` and `gather()` if you look for help on the internet---these work very similarly, but will eventually be retired and replaced by the pivot functions. 
+
+### From long to wide
+
+For example, in the code below, we take our `trial_data` (using the accuracy information only, the `-` in the `select()` function allows us to drop the RT information). We then tell `pivot_wider()` that it should take column names from the current `item` column, and use the values in the `acc` column to fill them.
+
+```{r}
+participant_items <- trial_data %>% 
+  select(-RT, -accRT) %>% 
+  pivot_wider(names_from = item, values_from = acc)
+```
+
+We can check that it worked by previewing the dataset, and by checking that we now have one row per participant.
+
+```{r}
+head(participant_items)
+nrow(participant_items)
+```
+
+### From wide to long
+
+And whilst we're at it, what if we want to go from the "wide" dataset back to "long" again? We tell `pivot_longer()` to use all columns apart from the ID column (`cols = -ID`); the column names should go back to an `item` column, and the values should go in an `acc` column. 
+
+```{r}
+items_back <- participant_items %>% 
+  pivot_longer(cols = -ID, names_to = "item", values_to = "acc")
+
+head(items_back)
+```
+
+We can see now that the number of rows in the returned version match our original trial level data:
+```{r}
+nrow(items_back)
+nrow(trial_data)
+```
+
+# Summary
+
+I hope you have seen that the *tidyverse* tools can be helpful in efficiently processing new datasets. In the initial example, we used the following functions to process our data:  
+
+* `read.csv()` to read in the data.
+* `filter()` to keep one row per trial, containing the participant response.
+* `select()` to keep the relevant columns.
+* `set_names()` or `rename()` to name the columns in a more intuitive way. 
+* `group_by()` and `summarise()` to calculate summary statistics for each participant. These are also useful when producing descriptive statistics across the whole sample.
+
+Beyond this, we also learned a few other helpful tools for working with the data and applying your knowledge to more complex datasets:  
+
+* `mutate()` to create new variables based on the content of other columns. We also combined this with `ifelse()` to create variables based on certain conditions.   
+* `left_join()` and `full_join()` to join dataframes together horizontally (on the basis of matching row IDs).  
+* `bind_rows()` to "stack" dataframes on top of each other, adding extra rows (on the basis of matching columns).   
+* `pivot_wider()` and `pivot_longer()` to rearrange data between long and wide formats.  
+
+We've also used `head()`, `count()`, and `nrow()` throughout to keep checking that our data processing looked sensible.
+
+Just as we saw at the end of the Part 1, using the pipe operator means that you can easily incorporate these steps into your data processing---feeding from one step to the next. All in one tidy and efficient block of code!
+
+
+### How to find help
+
+If you get stuck with the material here, I encourage you to email me [emma.james@york.ac.uk](emma.james@york.ac.uk)---I would appreciate the feedback in helping to make this material clearer and more accessible.
+
+More broadly speaking, there are some key sources of help when you get stuck with your R tasks. 
+
+1. If you can't remember what you need to put in a particular function (or want to know what other options might be available), you can type `help(function)` in the console to bring up its documentation (replacing `function` with the function name, e.g., `help(left_join)`.
+2. There are some excellent cheatsheets available for quick reference. For example, the dplyr cheatsheet can be found [here](https://dplyr.tidyverse.org/).
+3. Google is your friend. It's highly likely that multiple people will have asked very similar questions to you on platforms such as [StackExchange](https://stackexchange.com/) - frequent googling is very normal, even for professional programmers!
+
+
+On that last note, I wish to provide a final reassurance to **embrace the errors** and the warnings. Sometimes they are warnings that you can choose to ignore (as we did above when binding the dataframes), but they are useful to investigate if things aren't turning out as you expect. These are readily copy and pasted into Google, where you can find more information to understand it better. It *doesn't* mean that you've broken R!
+
+
+***********************
+
+**Acknowledgements:**
+
+Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial.
+
+**Package information:**
+
+This tutorial was created using the following package versions:
+
+```{r echo = FALSE}
+sessionInfo()
+```
