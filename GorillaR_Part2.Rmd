@@ -38,6 +38,8 @@ Make sure you have the `tidyverse` library loaded!
 library(tidyverse)
 ```
 
+***********************
+
 # Dealing with more than one experimental condition {#leftjoin}
 
 The example used in Part 1 was a very simple one, designed to get you started with data processing using the *tidyverse*. However, you more than likely have more than one experimental condition in your data. 
@@ -88,6 +90,8 @@ head(participant_data_conds_w)
 ```
 
 Now we have an RT column for participant averages in each neighbour condition (many, none, one), and the same again for accuracy.
+
+***********************
 
 # Creating new variables using `mutate()`
 
@@ -176,6 +180,7 @@ participant_data <- trial_data %>%
             meanRT = mean(accRT, na.rm = TRUE))
 ```
 
+***********************
 
 # Combining output files using `bind_rows()` and `_join()`
 
@@ -261,6 +266,8 @@ nrow(full_data)
 
 We can see that here they are the same, as all participants completed both the first and second activity, and the merge has been successful in merging these together. If the numbers mismatch in your own dataset, you will want to think about why---did some participants have missing data across the tasks? Have any rows not successfully merged (e.g., due to an error in the participant ID number)?
 
+***********************
+
 # Reshaping your dataset using `pivot_()` {#pivot}
 
 Finally, it's useful to know how to rearrange your data so that it can be used for different kinds of analysis. Many statistical functions in R like "long format" data---one trial per participant per row, as in our `trial_data` above. But what if you want to inspect patterns of performance across items? "Wide format" data---all data for one participant on a single row---may be helpful for saving out your data in a concise way, or for certain types of analysis (e.g., PCA).
@@ -300,6 +307,8 @@ We can see now that the number of rows in the returned version match our origina
 nrow(items_back)
 nrow(trial_data)
 ```
+
+***********************
 
 # Summary
 

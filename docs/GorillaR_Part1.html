@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -105,33 +105,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 66px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .dropdown-submenu {
   position: relative;
@@ -356,6 +356,9 @@ div.tocify {
 <li>
   <a href="GorillaR_Part2.html">Part 2</a>
 </li>
+<li>
+  <a href="version.html">version Info</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -380,6 +383,7 @@ div.tocify {
 <p>Once you have the packages installed, you need to load them into your library. You need to do this at the start of every script, for every time you open R.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <p>What have we loaded here? By loading the <em>tidyverse</em> library, we have actually loaded several packages, including <em>ggplot2</em> (the go-to package for plotting in R), <em>dplyr</em>, <em>tidyr</em>, <em>readr</em>, <em>purrr</em>, <em>tibble</em>, <em>stringr</em>, and <em>forcats</em>. Each of these packages contains a set of tools that you can draw upon to complete your tasks. We don’t actually use all of them here, but loading the core <em>tidyverse</em> library is an easy way to make a lot of key functions available. There are also more specialist <em>tidyverse</em> packages that you can load in separately (see <a href="https://www.tidyverse.org/packages/">here</a>) for working with particular kinds of data.</p>
+<hr />
 </div>
 <div id="step-1-reading-in-the-raw-data" class="section level1">
 <h1>Step 1: Reading in the raw data</h1>
@@ -391,6 +395,7 @@ div.tocify {
 <p>It’s a good idea to preview the dataframe to check that things haven’t gone awry. The easiest way to do this is to use the viewer in RStudio (unless your dataset is huge). You can open the viewer by double-clicking the little grid icon next to dataframe in the Environment pane.</p>
 <p><img src="figures/tableview.png" /></p>
 <p>If you’d like to try processing this dataset yourself, you can find the files in the zip folder.</p>
+<hr />
 </div>
 <div id="step-2-using-filter-to-select-data-rows" class="section level1">
 <h1>Step 2: Using <code>filter()</code> to select data rows</h1>
@@ -445,6 +450,7 @@ div.tocify {
   count()</code></pre>
 <p>You should now see that a new dataframe called <code>trial_count</code> has appeared in your RStudio environment window. You can open it in the viewer to explore it manually if you prefer.</p>
 <p><em>Note that we use <code>Participant.Private.ID</code> here as the anonymised ID provided by Gorilla. If recruiting via Prolific, the <code>Participant.Public.ID</code> column will include their Prolific ID, and you may wish to use this initially to check for task compliance/approving submissions.</em></p>
+<hr />
 </div>
 </div>
 <div id="step3" class="section level1">
@@ -509,6 +515,7 @@ div.tocify {
 ## 4 508739 dester   0  6945.2
 ## 5 508739  wabon   1 12621.1
 ## 6 508739 ballow   0  6757.5</code></pre>
+<hr />
 </div>
 </div>
 <div id="step-4-computing-participant-level-averages-using-summarise" class="section level1">
@@ -545,6 +552,7 @@ div.tocify {
 ## 5 508757   1      5345.
 ## 6 508942   0.6    4281.</code></pre>
 <p>You can see now that we have just one accuracy score and one RT score for each participant ID. If this is your first time processing your data, you could also check this manually on one or two participants to check the data are as you expect.</p>
+<hr />
 </div>
 </div>
 <div id="step-5-saving-the-processed-data" class="section level1">
@@ -554,6 +562,7 @@ div.tocify {
 <pre class="r"><code>write.csv(trial_data, &quot;trial_data.csv&quot;, row.names = FALSE)
 write.csv(participant_data, &quot;participant_averages.csv&quot;, row.names = FALSE)</code></pre>
 <p>I’ve also include <code>"./output/"</code> at the start of my file name, to save the files to an “output” folder.</p>
+<hr />
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
@@ -583,6 +592,7 @@ write.csv(participant_data, &quot;participant_averages.csv&quot;, row.names = FA
 <div id="onwards-to-part-2" class="section level3">
 <h3>Onwards to Part 2…</h3>
 <p>In Part 2 of this tutorial, we will learn how to use these tools when working with more complex datasets: those with more conditions, and those that need combining across several files or perhaps even several tasks. We’ll also cover how to build in an eligibility check for keeping track of your sample size as it comes in, and how to re-arrange your data for different purposes.</p>
+<p>Ready? <a href="https://emljames.github.io/GorillaR/GorillaR_Part2.html">Let’s go!</a></p>
 </div>
 </div>
 

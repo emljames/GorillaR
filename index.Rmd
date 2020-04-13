@@ -13,6 +13,7 @@ The aim of this tutorial is to provide an introduction to data manipulation in R
 
 In this first part of the tutorial, we will cover the basics of extracting the relevant data from your output files. In Part 2, we will cover some extra tips and tricks for monitoring sample size during online data collection, scaling up the tools to more complex datasets, and re-organising your data flexibly.
 
+***********************
 
 ### Knowledge required
 
@@ -28,6 +29,7 @@ If you prefer some light interactive activities, you can also try:
 * [DataCamp - R Onboarding](https://www.datacamp.com/onboarding/create_account?track_id=11)
 * [Codeacademy - R](https://www.codecademy.com/learn/learn-r)
 
+***********************
 
 ### What's this "tidyverse" you speak of? 
 
@@ -47,21 +49,11 @@ As with most programming tasks, there are multiple different ways of achieving t
 
 For me, learning to use the *tidyverse* took me from years of copying and pasting random bits of code from the internet, to being able to sit down and write a data processing script from scratch. I hope you'll find it helpful too!
 
+Ready? [Let's begin!](https://emljames.github.io/GorillaR/GorillaR_Part1.html)
 
 ***********************
 
 **Acknowledgements:**
 
-Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial. Please email any additional feedback to [emma.james@york.ac.uk](emma.james@york.ac.uk).
+Thank you to Catia Oliveira, Ruth Lee, Claudia Mazzuca, and Jon Flavell for trialling and providing valuable feedback on this tutorial. Additional feedback would be gratefully received via email to [emma.james@york.ac.uk](emma.james@york.ac.uk).
 
-**Package information:**
-
-This tutorial was created using the following package versions:
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-library(tidyverse)
-```
-
-```{r echo = FALSE}
-sessionInfo()
-```

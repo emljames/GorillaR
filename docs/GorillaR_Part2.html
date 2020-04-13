@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -105,33 +105,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 66px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .dropdown-submenu {
   position: relative;
@@ -356,6 +356,9 @@ div.tocify {
 <li>
   <a href="GorillaR_Part2.html">Part 2</a>
 </li>
+<li>
+  <a href="version.html">version Info</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -392,6 +395,7 @@ div.tocify {
 <pre class="r"><code>trial_data &lt;- read.csv(&quot;./output/trial_data.csv&quot;)
 participant_data &lt;- read.csv(&quot;./output/participant_averages.csv&quot;)</code></pre>
 <p>Make sure you have the <code>tidyverse</code> library loaded!</p>
+<hr />
 </div>
 </div>
 <div id="leftjoin" class="section level1">
@@ -466,6 +470,7 @@ head(participant_data_conds_w)</code></pre>
 ## 5 508757       5752.       6730.      3554.          1            1           1  
 ## 6 508942       3968.       3711.      5163.          0.6          0.6         0.6</code></pre>
 <p>Now we have an RT column for participant averages in each neighbour condition (many, none, one), and the same again for accuracy.</p>
+<hr />
 </div>
 </div>
 <div id="creating-new-variables-using-mutate" class="section level1">
@@ -550,6 +555,7 @@ head(participant_data_conds_w)</code></pre>
   group_by(ID) %&gt;% 
   summarise(meanAcc = mean(acc), 
             meanRT = mean(accRT, na.rm = TRUE))</code></pre>
+<hr />
 </div>
 </div>
 <div id="combining-output-files-using-bind_rows-and-_join" class="section level1">
@@ -620,6 +626,7 @@ head(day2_data)</code></pre>
 <pre class="r"><code>nrow(full_data)</code></pre>
 <pre><code>## [1] 52</code></pre>
 <p>We can see that here they are the same, as all participants completed both the first and second activity, and the merge has been successful in merging these together. If the numbers mismatch in your own dataset, you will want to think about why—did some participants have missing data across the tasks? Have any rows not successfully merged (e.g., due to an error in the participant ID number)?</p>
+<hr />
 </div>
 </div>
 <div id="pivot" class="section level1">
@@ -667,6 +674,7 @@ head(items_back)</code></pre>
 <pre><code>## [1] 780</code></pre>
 <pre class="r"><code>nrow(trial_data)</code></pre>
 <pre><code>## [1] 780</code></pre>
+<hr />
 </div>
 </div>
 <div id="summary" class="section level1">
