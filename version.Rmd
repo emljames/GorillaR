@@ -1,0 +1,15 @@
+---
+title: "Version Information"
+---
+
+**Package information:**
+
+This tutorial was created using the following package versions:
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+```{r echo = FALSE}
+sessionInfo()
+```

@@ -23,6 +23,8 @@ library(tidyverse)
 
 What have we loaded here? By loading the *tidyverse* library, we have actually loaded several packages, including *ggplot2* (the go-to package for plotting in R), *dplyr*, *tidyr*, *readr*, *purrr*, *tibble*, *stringr*, and *forcats*. Each of these packages contains a set of tools that you can draw upon to complete your tasks. We don't actually use all of them here, but loading the core *tidyverse* library is an easy way to make a lot of key functions available. There are also more specialist *tidyverse* packages that you can load in separately (see [here](https://www.tidyverse.org/packages/)) for working with particular kinds of data. 
 
+***********************
+
 # Step 1: Reading in the raw data
 
 In this example, we will use an output file from a word-learning experiment programmed in Gorilla (currently unpublished data, further information available [here](https://osf.io/stx6q/)). Gorilla spits out a different csv file for each task node in the experiment. For now, we will focus on reading in and processing data from a single task file, but we will cover how to combine data from multiple task files in Part 2.
@@ -44,6 +46,8 @@ It's a good idea to preview the dataframe to check that things haven't gone awry
 
 
 If you'd like to try processing this dataset yourself, you can find the files in the zip folder. 
+
+***********************
 
 # Step 2: Using `filter()` to select data rows
 
@@ -102,6 +106,8 @@ You should now see that a new dataframe called `trial_count` has appeared in you
 
 *Note that we use `Participant.Private.ID` here as the anonymised ID provided by Gorilla. If recruiting via Prolific, the `Participant.Public.ID` column will include their Prolific ID, and you may wish to use this initially to check for task compliance/approving submissions.*
 
+***********************
+
 # Step 3: Using `select()` and `rename()` to retain key variables {#step3}
 
 OK, so we've narrowed down the dataset somewhat, but Gorilla has also given us lots of information that---whilst useful---we don't need for our main data analysis. How many columns you have depends on how you have set up your experiment, but you can see we have a lot here by printing out the column names.
@@ -158,6 +164,8 @@ Again, we can carry out quick checks to make sure we've not done anything stupid
 head(trial_data)
 ```
 
+***********************
+
 # Step 4: Computing participant-level averages using `summarise()`
 
 ### Compute a mean score for each participant
@@ -190,6 +198,8 @@ head(participant_data)
 
 You can see now that we have just one accuracy score and one RT score for each participant ID. If this is your first time processing your data, you could also check this manually on one or two participants to check the data are as you expect. 
 
+***********************
+
 # Step 5: Saving the processed data
 
 Now we have our trial level and participant level data, we can save these out as processed csv files. Doing so means that you won't have to do your data processing at the start of each analysis script (you can read in the processed files directly), and you can more readily share these files on the Open Science Framework.
@@ -202,6 +212,8 @@ write.csv(participant_data, "participant_averages.csv", row.names = FALSE)
 ```
 
 I've also include `"./output/"` at the start of my file name, to save the files to an "output" folder.  
+
+***********************
 
 # Summary
 
@@ -236,3 +248,4 @@ And that's it! From experiment output to cleaned processed data in just 6 lines 
 
 In Part 2 of this tutorial, we will learn how to use these tools when working with more complex datasets: those with more conditions, and those that need combining across several files or perhaps even several tasks. We'll also cover how to build in an eligibility check for keeping track of your sample size as it comes in, and how to re-arrange your data for different purposes.
 
+Ready? [Let's go!](https://emljames.github.io/GorillaR/GorillaR_Part2.html)

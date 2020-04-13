@@ -9,9 +9,11 @@ navbar:
     href: GorillaR_Part1.html
   - text: "Part 2"
     href: GorillaR_Part2.html
+  - text: "version Info"
+    href: version.html
 output:
   html_document:
-    theme: cosmo
+    theme: readable
     toc: yes
     toc_float:
       collapsed: yes
