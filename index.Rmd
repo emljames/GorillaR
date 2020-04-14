@@ -3,8 +3,7 @@ title: "Tutorial Home"
 author: "Emma James"
 ---
 
---- *[About](https://www.york.ac.uk/psychology/staff/postdocs/elj504/)*  
---- *[Twitter](https://twitter.com/emljames)*   
+--- *[About](https://www.york.ac.uk/psychology/staff/postdocs/elj504/)*    --- *[Twitter](https://twitter.com/emljames)*   
 
 ***********************
 
@@ -46,8 +45,8 @@ As with most programming tasks, there are multiple different ways of achieving t
 
 **...and the cons?** 
 
-* Coders transferring from different programming sometimes prefer base R operations, as they more directly relate to their existing knowledge.  
-* Doesn't handle big data as well (the *data.table* package is better suited to this). But I really do mean big data here (i.e., sourced from naturally occurring datasets), most experimental data should be fine. 
+* Coders transferring from different programming languages sometimes prefer base R operations, as they more directly relate to their existing knowledge.  
+* Doesn't handle big data particularly well (the *data.table* package is better suited to this). But I really do mean big data here (i.e., sourced from rich naturally occurring datasets), most experimental data should be fine. 
 
 For me, learning to use the *tidyverse* took me from years of copying and pasting random bits of code from the internet, to being able to sit down and write a data processing script from scratch. I hope you'll find it helpful too!
 
