@@ -10,9 +10,10 @@ author: "Emma James"
 
 ### Outline
 
-The aim of this tutorial is to provide an introduction to data manipulation in R, primarily using tools from the *[tidyverse](https://www.tidyverse.org/)*. Given that lots of people are currently moving their data collection procedures online, we will use an output file from [Gorilla](https://gorilla.sc/) as an example. However, the tools should readily apply regardless of your data collection software.
+The aim of this tutorial is to provide an introduction to data manipulation in R, primarily using tools from the *[tidyverse](https://www.tidyverse.org/)*. Given that lots of people are currently moving their data collection procedures online, we will use an output file from [Gorilla](https://gorilla.sc/) as an example. However, the tools should readily apply regardless of your data collection software.^[If you're dealing with messy Excel sheets, you might like to check out [these handy tips](https://www.sophieheloisebennett.com/posts/excel-sheet-cleaning/) from Sophie Bennett.]
 
 In this first part of the tutorial, we will cover the basics of extracting the relevant data from your output files. In Part 2, we will cover some extra tips and tricks for monitoring sample size during online data collection, scaling up the tools to more complex datasets, and re-organising your data flexibly.
+
 
 ***********************
 
